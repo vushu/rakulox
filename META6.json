@@ -1,0 +1,17 @@
+{
+  "auth": "",
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "A brand new and very nice module",
+  "name": "RakuLox",
+  "provides": {
+    "RakuLox": "lib/RakuLox.rakumod"
+  },
+  "resources": [
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.1"
+}

@@ -1,0 +1,147 @@
+use Test;
+
+use lib "lib";
+use RakuLox;
+#plan 3;
+
+use-ok "RakuLox";
+
+my $parser = Lox.new;
+my $code = qq:to/END/;
+true;
+false;
+mama(s, c);
+--------!---2;
+mama(s, c).x;
+mama(s, c).x();
+mama.x;
+
+END
+
+ok $parser.parse($code), "parsing call rule";
+
+$code = qq:to/END/;
+--------!---2;
+END
+
+
+ok $parser.parse($code), "parsing unary rule";
+
+
+$code = qq:to/END/;
+2/1;
+2*1;
+END
+
+
+ok $parser.parse($code), "parsing factor rule";
+
+$code = qq:to/END/;
+2-1;
+2+1;
+END
+
+
+ok $parser.parse($code), "parsing term rule";
+
+
+$code = qq:to/END/;
+2>1;
+2>=1;
+2<1;
+2<=1;
+END
+
+
+ok $parser.parse($code), "parsing comparison rule";
+
+$code = qq:to/END/;
+2!=1;
+2==1;
+END
+
+
+ok $parser.parse($code), "parsing equality rule";
+
+$code = qq:to/END/;
+2 and 1;
+END
+
+ok $parser.parse($code), "parsing and rule";
+
+$code = qq:to/END/;
+2 or 1;
+END
+
+ok $parser.parse($code), "parsing or rule";
+
+$code = q:to/END/;
+a = 2;
+a().x = 2;
+a().x.x.q().x.y = 42;
+END
+
+ok $parser.parse($code), "parsing assignment rule";
+
+$code = q:to/END/;
+class Myclass {
+    hello() {
+        var mama = x;
+    }
+}
+
+fun dosomething (x, y) {
+    var lolles = 232;
+    fun mama() {
+        x = 1;
+        hojo.x().w = 42;
+    }
+    mama();
+}
+END
+
+ok $parser.parse($code), "parsing declaration rules";
+
+$code = q:to/END/;
+while (true) {
+    var x = 42;
+}
+END
+
+ok $parser.parse($code), "parsing while-stmt rule";
+
+$code = q:to/END/;
+return mama();
+END
+
+ok $parser.parse($code), "parsing return-stmt rule";
+
+$code = q:to/END/;
+print mama();
+END
+
+ok $parser.parse($code), "parsing print-stmt rule";
+
+$code = q:to/END/;
+if(mama()){
+    var mam = 112;
+}
+END
+
+ok $parser.parse($code), "parsing if-stmt rule";
+
+$code = q:to/END/;
+for(;;) {
+    var i = 10;
+}
+for (mama = 1; i < 10; mama()) {}
+for (mama = 1; ; mama()) {}
+
+END
+
+ok $parser.parse($code), "parsing for-stmt rule";
+
+
+
+
+
