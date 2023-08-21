@@ -1,4 +1,4 @@
-grammar Lox {
+grammar LoxGrammar {
 
     token TOP {
         <declaration>*

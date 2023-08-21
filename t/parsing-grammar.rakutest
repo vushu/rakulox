@@ -1,12 +1,12 @@
 use Test;
 
 use lib "lib";
-use RakuLox;
-#plan 3;
-
 use-ok "RakuLox";
 
-my $parser = Lox.new;
+use RakuLox::LoxGrammar;
+
+
+my $parser = LoxGrammar.new;
 my $code = qq:to/END/;
 true;
 false;
