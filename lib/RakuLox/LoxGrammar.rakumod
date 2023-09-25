@@ -6,13 +6,13 @@ grammar LoxGrammar {
 
     #Statements
     rule statement {
-        | <expr-stmt>
-        | <for-stmt>
-        | <if-stmt>
-        | <print-stmt>
-        | <return-stmt>
-        | <while-stmt>
-        | <block>
+        | <statement=expr-stmt>
+        | <statement=for-stmt>
+        | <statement=if-stmt>
+        | <statement=print-stmt>
+        | <statement=return-stmt>
+        | <statement=while-stmt>
+        | <statement=block>
 
     }
 
@@ -103,7 +103,7 @@ grammar LoxGrammar {
     }
 
     rule unary {
-        [<bang-op> | <minus-op>] <unary> | <call>
+        [<bang-op> | <minus-op>]* <call>
     }
 
     rule call {
@@ -197,10 +197,10 @@ grammar LoxGrammar {
 
     #Declarations
     token declaration {
-        | <class-decl>
-        | <fun-decl>
-        | <var-decl>
-        | <statement>
+        | <declaration=class-decl>
+        | <declaration=fun-decl>
+        | <declaration=var-decl>
+        | <declaration=statement>
     }
 
     rule class-decl {

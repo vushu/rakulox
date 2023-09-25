@@ -1,0 +1,25 @@
+use Test;
+
+use lib "lib";
+use-ok "RakuLox";
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+class Mama {}
+END
+
+
+my $ast = $parser.parse($code, :actions($actions));
+#for $top.declarations -> $d {
+#say "HHHH ", $d;
+#}
+
+$interpreter.interpret($ast.made);
