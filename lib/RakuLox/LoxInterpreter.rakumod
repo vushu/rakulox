@@ -1,32 +1,60 @@
 use RakuLox::LoxAST;
 unit class LoxInterpreter;
 
-multi method interpret-node (ASTNode:D $node){
-    self.interpret-node($node);
+multi method evaluate-node (Expr:D $node){
+    self.evaluate-node($node);
 }
 
-multi method interpret(Top $node) {
+multi method evaluate(Top $node) {
+    my @result;
     say "TOP AST, number of declarations: ", $node.declarations.elems;
     for $node.declarations -> $decl {
-        self.interpret($decl);
+        @result.push(self.evaluate($decl));
+    }
+    return @result;
+}
+
+multi method evaluate(ClassDeclaration $node) {
+    #    say $node.identifier;
+    say "CLASS Delclaration evaluate";
+}
+
+multi method evaluate(ExprStmt $node) {
+    say "ExprStmt evaluate";
+    self.evaluate($node.expression);
+}
+
+multi method evaluate(Expression $node) {
+    say "Expression evaluate";
+    self.evaluate($node.assignment);
+}
+
+multi method evaluate(Primary $node) {
+    return $node.value;
+}
+
+multi method evaluate(Binary $node) {
+    my $left = self.evaluate($node.left);
+    my $right = self.evaluate($node.right);
+
+    return do given $node.op {
+        when "-" {
+            +$left - +$right;
+        }
+        when "/" {
+            +$left / +$right;
+        }
+        when "*" {
+            +$left * +$right;
+        }
+        when "+" {
+            +$left - +$right;
+        }
+
     }
 }
 
-multi method interpret(ClassDeclaration $node) {
-    #    say $node.identifier;
-    say "CLASS Delclaration interpret";
-}
 
-multi method interpret(ExprStmt $node) {
-    say "ExprStmt interpret";
-    self.interpret($node.expression);
-}
-
-multi method interpret(Expression $node) {
-    say "Expression interpret";
-    self.interpret($node.assignment);
-}
-
-multi method interpret(Unary $node) {
+multi method evaluate(Unary $node) {
     say "yup unary !!!!!";
 }

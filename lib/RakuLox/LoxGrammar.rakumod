@@ -79,31 +79,50 @@ grammar LoxGrammar {
     }
 
     rule equality {
-        <comparison>+ % [
-            | <not-equal-op>
-            | <equal-op>
-        ]
+        <comparison>+ % <equality-op>
+    }
+
+    token equality-op {
+        | <not-equal-op>
+        | <equal-op>
     }
 
     rule comparison {
-        <term>+ % [
-            | <greater-than-op>
-            | <less-than-op>
-            | <greater-than-equal-op>
-            | <less-than-equal-op>
-        ]
+        <term>+ % <comparison-op>
+    }
+
+    token comparison-op {
+        | <greater-than-op>
+        | <less-than-op>
+        | <greater-than-equal-op>
+        | <less-than-equal-op>
     }
 
     rule term {
-        <factor>+ % [ <minus-op> | <plus-op> ]
+        <factor>+ % <term-op>
+    }
+
+    token term-op {
+        | <minus-op>
+        | <plus-op>
     }
 
     rule factor  {
-        <unary>+ % [ <division-op> | <multiplication-op> ]
+        <unary>+ % <factor-op>
+    }
+
+    token factor-op {
+        | <division-op>
+        | <multiplication-op>
     }
 
     rule unary {
-        [<bang-op> | <minus-op>]* <call>
+        <unary-op>* <call>
+    }
+
+    token unary-op {
+        | <bang-op>
+        | <minus-op>
     }
 
     rule call {
@@ -124,14 +143,32 @@ grammar LoxGrammar {
 
     rule primary {
         | <boolean>
-        | 'nil'
-        | 'this'
+        | <nil>
+        | <this>
         | <number>
         | <string>
         | <identifier>
-        | '(' ~ ')' <expression>
-        | 'super.' <identifier>
+        | <group-expression>
+        | <super-class>
     }
+
+    token nil {
+        'nil'
+    }
+
+    token this {
+        'this'
+    }
+
+    rule group-expression {
+        '(' ~ ')' <expression>
+    }
+
+    rule super-class {
+        'super.' <identifier>
+    }
+
+    
 
     token boolean {
         'true' | 'false'

@@ -12,11 +12,12 @@ my $actions = LoxActions.new;
 my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
-my $code = q:to/END/;
--2;
+# my $code = q:to/END/; a / 3 * 3 or 2 or 1 and 2 == 2 != 0 > 3 <= 23; END
+my $code = q:to/END/; 
+3 / 3 * 5;
 END
 
 
 my $ast = $parser.parse($code, :actions($actions)).made;
 
-$interpreter.interpret($ast);
+say $interpreter.evaluate($ast);

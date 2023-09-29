@@ -45,58 +45,72 @@ class LoxActions {
     }
 
     multi method logic-or($/) {
-        say "Inside logic or";
-        make LogicOr.new(left=>$<logic-and>[0].made,
-        op=> $<op>.Str, right=> $<logic-and>[1].made);
+        say "Inside normal logic or ";
+        make make-node($<logic-and>, $<or-op>);
     }
 
-    multi method logic-or($/ where $<logic-and>.elems == 1) {
-        # Skipping logic since no logic
-        say "Skipping logic-or.";
-        make $<logic-and>.first.made;
+    multi method logic-and($/) {
+        say "Making logic and";
+        make make-node($<equality>, $<and-op>);
     }
 
-    multi method logic-and($/ where $<equality>.elems == 1){
-        say "Skipping logic-and.";
-        make $<equality>.first.made;
+    multi method equality($/){
+        say "Equality.";
+        make make-node($<comparison>, $<equality-op>);
     }
 
-    multi method equality($/ where $<comparison>.elems == 1){
-        say "Skipping equality.";
-        make $<comparison>.first.made;
+    method comparison($/){
+        say "Comparison.";
+        make make-node($<term>, $<comparison-op>);
     }
 
-    method comparison($/ where $<term>.elems == 1){
-        say "Skipping comparison.";
-        make $<term>.first.made;
+    method term($/){
+        say "Term.";
+        make make-node($<factor>, $<term-op>);
     }
 
-    method term($/ where $<factor>.elems == 1){
-        say "Skipping term.";
-        make $<factor>.first.made;
+    method factor($/){
+        make make-node($<unary>, $<factor-op>);
     }
 
-    method factor($/ where $<unary>.elems == 1){
-        say "Skipping factor.";
-        make $<unary>.first.made;
-    }
-
-    method unary($/) {
-
+    multi method unary($/ where $<minus-op>) {
+        my Expr $expr = $<logic-and>[0].made;
         say "Making Unary";
         my $v = $<call>.made;
         my $op = $<minus-op>.map: *.made;
-        my $unary = Unary.new($op, $v);
+        my $unary = Unary.new(op=>$op, right=> $v);
         make $unary;
     }
 
-    method call($/) {
+    multi method unary($/ where !$<minus-op>){
+        make $<call>.made;
+    }
+
+    method call($/ where !$<call-tail>) {
+        # Skipping call
         make $<primary>.made;
     }
 
     method primary($/) {
-        make $<number>.made;
+        my $value = do given $/ {
+            when $<boolean> { $<boolean>.made };
+            when $<nil> { $<nil>.made };
+            when $<this> { $<this>.made };
+            when $<number> { $<number>.made };
+            when $<string> { $<string>.made };
+            when $<identifier> { $<identifier>.made };
+            when $<group-expression> { $<group-expression>.made };
+            when $<super-dot> { $<super-dot>.made };
+        }
+        make Primary.new(value=> $value);
     }
+
+    method boolean($/) { make ($/ == 'true') }
+    method nil($/) { make ~$/ }
+    method this($/) { make ~$/ }
+    method group-expression($/) { make Grouping.new(expression=>$<expression>.made) }
+    method super-class($/) { $<identifier>.made }
+
 
     method minus-op($/) {
         make ~$/;
@@ -105,5 +119,14 @@ class LoxActions {
     method number($/) {
         make +$/;
     }
+}
 
+sub make-node(@collection, @ops) returns Expr {
+    my @ast-nodes of Expr = @collection.map: *.made;
+    my Expr $expr = @ast-nodes.shift;
+    for @ast-nodes -> $node {
+        $expr = Binary.new(left => $expr, right => $node, op => @ops.shift.Str);
+        $expr.op;
+    }
+    return $expr;
 }

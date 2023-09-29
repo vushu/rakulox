@@ -1,59 +1,72 @@
-class ASTNode {}
+class Expr {}
+class Stmt {}
 
-class Unary is ASTNode {
-    has $.op;
-    has Any $.right;
-    method new ($op, $right) {
-        self.bless(:$op,:$right);
-    }
+class Binary is Expr {
+    has Expr $.left;
+    has Expr $.right;
+    has Str $.op;
 }
 
-class Top is ASTNode {
-    has ASTNode @.declarations is rw;
+
+
+class Top is Expr {
+    has Expr @.declarations is rw;
 }
 
-class Declaration is ASTNode {
-    has ASTNode $.declaration;
+class Declaration is Expr {
+    has Expr $.declaration;
     method new ($declaration) {
         self.bless(:$declaration);
     }
 }
 
-class Statement is ASTNode {
+class Statement is Expr {
 }
 
-class ExprStmt is ASTNode {
-    has ASTNode $.expression;
+class ExprStmt is Expr {
+    has Expr $.expression;
     method new ($expression) {
         self.bless(:$expression)
     }
 }
 
-class Expression is ASTNode {
-    has ASTNode $.assignment;
+class Expression is Expr {
+    has Expr $.assignment;
 }
 
-#class Assignment is ASTNode {
-#has ASTNode @.;
+#class Assignment is Expr {
+#has Expr @.;
 #method new ($expression) {
 #self.bless(:$expression)
 #}
 #}
 
-
-class ClassDeclaration is ASTNode {
-    has Str $.identifier;
-
-}
-
-class VarDecl is ASTNode {
-    has Str $.identifier;
-    has ASTNode $.expression;
-}
-
-class LogicOr is ASTNode {
-    has ASTNode $.right;
-    has ASTNode $.left;
+class Unary is Expr {
     has Str $.op;
+    has Expr $.right;
+}
 
+class ClassDeclaration is Expr {
+    has Str $.identifier;
+}
+
+class VarDecl is Expr {
+    has Str $.identifier;
+    has Expr $.expression;
+}
+
+class LogicOr is Binary {
+}
+
+class Call is Expr {
+
+}
+
+class Grouping is Expr {
+    has Expr $.expression;
+}
+
+
+class Primary is Expr {
+    has $.value;
 }

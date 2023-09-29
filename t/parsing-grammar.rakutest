@@ -71,6 +71,7 @@ ok $parser.parse($code), "parsing and rule";
 
 $code = qq:to/END/;
 2 or 1;
+2 or 1 or 5;
 END
 
 ok $parser.parse($code), "parsing or rule";
