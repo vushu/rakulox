@@ -12,13 +12,17 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
--2 * 2;
+4 * (4 + 5) * -4;
+-4;
 END
 
 
 my $ast = $parser.parse($code, :actions($actions)).made;
 if $ast {
-    say $interpreter.evaluate($ast);
+    my $res = $interpreter.evaluate($ast);
+    say $res;
+    ok $res[0] eq -144, "Calculates to -144";
+    ok $res[1] eq -4, "Should be -4";
 }
 else {
     say "Failed to parse";

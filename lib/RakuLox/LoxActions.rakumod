@@ -35,42 +35,42 @@ class LoxActions {
     }
 
     multi method assignment($/ where $<logic-or>) {
-        say "-> -> -> -> -> -> -> -> -> making logic or";
+        #say "-> -> -> -> -> -> -> -> -> making logic or";
         make $<logic-or>.made;
     }
 
     multi method assignment($/ where !$<logic-or>) {
-        say "Paren dot identifier";
+        #say "Paren dot identifier";
         die "Please implement";
     }
 
     multi method logic-or($/) {
-        say "Inside normal logic or ";
+        #say "Inside normal logic or ";
         make make-node($<logic-and>, $<or-op>);
     }
 
     multi method logic-and($/) {
-        say "Making logic and";
+        #say "Making logic and";
         make make-node($<equality>, $<and-op>);
     }
 
     multi method equality($/){
-        say "Equality.";
+        #say "Equality.";
         make make-node($<comparison>, $<equality-op>);
     }
 
     method comparison($/){
-        say "Comparison. ";
+        #say "Comparison. ";
         make make-node($<term>, $<comparison-op>);
     }
 
     method term($/){
-        say "Term. ";
+        #say "Term. ";
         make make-node($<factor>, $<term-op>);
     }
 
     method factor($/){
-        say "Factor ", $<factor-op>;
+        #say "Factor ", $<factor-op>;
         make make-node($<unary>, $<factor-op>);
     }
 
@@ -89,7 +89,11 @@ class LoxActions {
         make $<primary>.made;
     }
 
-    method primary($/) {
+    multi method primary($/ where $<group-expression>){
+        make $<group-expression>.made
+    }
+
+    multi method primary($/ where !$<group-expression>) {
         my $value = do given $/ {
             when $<boolean> { $<boolean>.made };
             when $<nil> { $<nil>.made };
@@ -97,16 +101,17 @@ class LoxActions {
             when $<number> { $<number>.made };
             when $<string> { $<string>.made };
             when $<identifier> { $<identifier>.made };
-            when $<group-expression> { $<group-expression>.made };
             when $<super-class> { $<super-class>.made };
         }
-        make Primary.new(value=> $value);
+        make Literal.new(value=> $value);
     }
 
     method boolean($/) { make ($/ == 'true') }
     method nil($/) { make ~$/ }
     method this($/) { make ~$/ }
-    method group-expression($/) { make Grouping.new(expression=>$<expression>.made) }
+    method group-expression($/) {
+        make Grouping.new(expression=>$<expression>.made);
+    }
     method super-class($/) { $<identifier>.made }
 
 

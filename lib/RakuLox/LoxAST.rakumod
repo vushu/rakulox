@@ -63,6 +63,6 @@ class Grouping is Expr {
     has Expr $.expression;
 }
 
-class Primary is Expr {
+class Literal is Expr {
     has $.value;
 }
