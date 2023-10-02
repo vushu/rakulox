@@ -43,9 +43,36 @@ multi method evaluate(Binary $node) {
             +$left * +$right;
         }
         when "+" {
-            +$left + +$right;
+            self.handle-plus($left, $right);
         }
+        when ">" {
+            +$left > +$right;
+        }
+        when ">=" {
+            +$left >= +$right;
+        }
+        when "<" {
+            +$left < +$right;
+        }
+        when "<=" {
+            +$left <= +$right;
+        }
+        when "==" {
+            +$left eq +$right;
+        }
+        when "!=" {
+            +$left ne +$right;
+        }
+
     }
+}
+
+multi method handle-plus(Numeric $left, Numeric $right) {
+    $left + $right;
+}
+
+multi method handle-plus(Str $left, Str $right) {
+    $left ~ $right;
 }
 
 multi method evaluate(Unary $node) {

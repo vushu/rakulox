@@ -126,6 +126,10 @@ class LoxActions {
     method number($/) {
         make +$/;
     }
+
+    method string($/) {
+        make ~$<string-content>;
+    }
 }
 
 sub make-node(@collection, @ops) returns Expr {

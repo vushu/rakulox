@@ -16,6 +16,13 @@ my $interpreter = LoxInterpreter.new;
 my $code = q:to/END/;
 3 / 3 * -5;
 3 * -3 * -5/0.5;
+"abc" + "defg";
+3 > 2;
+3 >= 2;
+1 < 2;
+2 <= 2;
+2 == 2;
+2 != 32;
 END
 
 
@@ -24,6 +31,13 @@ ok $ast, "Successfully parsed";
 my $result = $interpreter.evaluate($ast);
 ok $result[0] eq -5, "Calculates to -5";
 ok $result[1] eq 90, "Calculates to 90";
+ok $result[2] eq "abcdefg", "Should be abcdefg";
+ok $result[3], "Should be true";
+ok $result[4], "Should be true";
+ok $result[5], "Should be true";
+ok $result[6], "Should be true";
+ok $result[7], "Should be true";
+ok $result[8], "Should be true";
 
 done-testing;
 

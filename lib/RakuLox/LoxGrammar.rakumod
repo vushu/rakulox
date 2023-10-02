@@ -173,7 +173,11 @@ grammar LoxGrammar {
     }
 
     token string {
-        '"' ~ '"' \w*
+        '"' ~ '"' <string-content>
+    }
+
+    token string-content {
+        \w*
     }
 
     token identifier {
