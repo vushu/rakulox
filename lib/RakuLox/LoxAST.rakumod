@@ -55,9 +55,6 @@ class VarDecl is Expr {
     has Expr $.expression;
 }
 
-class LogicOr is Binary {
-}
-
 class Call is Expr {
 
 }
@@ -65,7 +62,6 @@ class Call is Expr {
 class Grouping is Expr {
     has Expr $.expression;
 }
-
 
 class Primary is Expr {
     has $.value;

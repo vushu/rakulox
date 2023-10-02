@@ -50,11 +50,17 @@ multi method evaluate(Binary $node) {
         when "+" {
             +$left - +$right;
         }
-
     }
 }
 
-
 multi method evaluate(Unary $node) {
-    say "yup unary !!!!!";
+    my $right = self.evaluate($node.right);
+    return do given $node.op {
+        when "-" {
+            - $right;
+        }
+        when "!" {
+            !$right;
+        }
+    }
 }

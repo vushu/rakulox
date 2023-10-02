@@ -40,7 +40,7 @@ class LoxActions {
     }
 
     multi method assignment($/ where !$<logic-or>) {
-        say "--> --> Paren dot identifier";
+        say "Paren dot identifier";
         die "Please implement";
     }
 
@@ -60,29 +60,27 @@ class LoxActions {
     }
 
     method comparison($/){
-        say "Comparison.";
+        say "Comparison. ";
         make make-node($<term>, $<comparison-op>);
     }
 
     method term($/){
-        say "Term.";
+        say "Term. ";
         make make-node($<factor>, $<term-op>);
     }
 
     method factor($/){
+        say "Factor ", $<factor-op>;
         make make-node($<unary>, $<factor-op>);
     }
 
-    multi method unary($/ where $<minus-op>) {
-        my Expr $expr = $<logic-and>[0].made;
-        say "Making Unary";
-        my $v = $<call>.made;
-        my $op = $<minus-op>.map: *.made;
-        my $unary = Unary.new(op=>$op, right=> $v);
+    multi method unary($/ where $<unary-op>) {
+        my $op = $<unary-op>.Str;
+        my $unary = Unary.new(op => $op, right => $<call>.made);
         make $unary;
     }
 
-    multi method unary($/ where !$<minus-op>){
+    multi method unary($/ where !$<unary-op>){
         make $<call>.made;
     }
 
@@ -100,7 +98,7 @@ class LoxActions {
             when $<string> { $<string>.made };
             when $<identifier> { $<identifier>.made };
             when $<group-expression> { $<group-expression>.made };
-            when $<super-dot> { $<super-dot>.made };
+            when $<super-class> { $<super-class>.made };
         }
         make Primary.new(value=> $value);
     }
@@ -112,9 +110,13 @@ class LoxActions {
     method super-class($/) { $<identifier>.made }
 
 
-    method minus-op($/) {
-        make ~$/;
-    }
+    method minus-op($/) { make ~$/; }
+
+    multi method factor-op($/ where $<division-op>) { make $<division-op>.made; }
+    multi method factor-op($/ where $<multiplication-op>) { make $<multiplication-op>.made; }
+
+    method division-op($/) { make ~$/; }
+    method multiplication-op($/) { make ~$/; }
 
     method number($/) {
         make +$/;

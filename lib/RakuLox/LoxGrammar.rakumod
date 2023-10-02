@@ -117,7 +117,7 @@ grammar LoxGrammar {
     }
 
     rule unary {
-        <unary-op>* <call>
+        <unary-op>? <call>
     }
 
     token unary-op {
@@ -167,8 +167,6 @@ grammar LoxGrammar {
     rule super-class {
         'super.' <identifier>
     }
-
-    
 
     token boolean {
         'true' | 'false'
