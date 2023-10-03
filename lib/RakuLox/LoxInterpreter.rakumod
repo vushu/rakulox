@@ -34,12 +34,15 @@ multi method evaluate(Binary $node) {
 
     return do given $node.op {
         when "-" {
+            self.check-number-operands("-", $left, $right);
             +$left - +$right;
         }
         when "/" {
+            self.check-number-operands("-", $left, $right);
             +$left / +$right;
         }
         when "*" {
+            self.check-number-operands("-", $left, $right);
             +$left * +$right;
         }
         when "+" {
@@ -67,12 +70,23 @@ multi method evaluate(Binary $node) {
     }
 }
 
+multi method check-number-operands(Str $op, Numeric $left, Numeric $right){
+}
+
+multi method check-number-operands(Str $op, $left, $right){
+    die "operator: $op operand must be a number.";
+}
+
 multi method handle-plus(Numeric $left, Numeric $right) {
     $left + $right;
 }
 
 multi method handle-plus(Str $left, Str $right) {
     $left ~ $right;
+}
+
+multi method handle-plus($left, $right) {
+    die "Operands must be two numbers or two strings. For + operator";
 }
 
 multi method evaluate(Unary $node) {

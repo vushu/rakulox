@@ -255,6 +255,4 @@ grammar LoxGrammar {
         'var' <identifier> ['=' <expression>]? ';'
     }
 
-
-
 }

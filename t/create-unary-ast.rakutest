@@ -27,3 +27,28 @@ if $ast {
 else {
     say "Failed to parse";
 }
+
+my $code = q:to/END/;
+"4" + 4;
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+if $ast {
+    dies-ok { $interpreter.evaluate($ast) }, "Should die because operands must both either be strings or numbers, when using + operator.";
+}
+else {
+    say "Failed to parse";
+}
+
+$code = q:to/END/;
+"4" * 4;
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+if $ast {
+    dies-ok { $interpreter.evaluate($ast) }, "Should die because operand must be a number, when using * operator.";
+}
+else {
+    say "Failed to parse";
+}
+
