@@ -24,14 +24,14 @@ class Statement is Expr {
 }
 
 class ExprStmt is Expr {
-    has Expr $.expression;
+    has Stmt $.expression;
     method new ($expression) {
         self.bless(:$expression)
     }
 }
 
-class Expression is Expr {
-    has Expr $.assignment;
+class Expression is Stmt {
+    has Expr $.expression;
 }
 
 #class Assignment is Expr {
@@ -66,3 +66,11 @@ class Grouping is Expr {
 class Literal is Expr {
     has $.value;
 }
+
+
+class Print is Stmt {
+    has $.expression;
+}
+
+
+

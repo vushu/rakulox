@@ -30,8 +30,7 @@ class LoxActions {
     }
 
     method expression($/) {
-        my $assignment = $<assignment>.made;
-        make Expression.new(assignment => $assignment);
+        make Expression.new(expression => $<assignment>.made);
     }
 
     multi method assignment($/ where $<logic-or>) {

@@ -21,7 +21,7 @@ multi method evaluate(ExprStmt $node) {
 }
 
 multi method evaluate(Expression $node) {
-    self.evaluate($node.assignment);
+    self.evaluate($node.expression);
 }
 
 multi method evaluate(Literal $node) {
@@ -71,6 +71,7 @@ multi method evaluate(Binary $node) {
 }
 
 multi method check-number-operands(Str $op, Numeric $left, Numeric $right){
+    # Continue
 }
 
 multi method check-number-operands(Str $op, $left, $right){
