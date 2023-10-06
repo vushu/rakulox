@@ -19,7 +19,7 @@ END
 
 my $ast = $parser.parse($code, :actions($actions)).made;
 if $ast {
-    my $res = $interpreter.evaluate($ast);
+    my $res = $interpreter.interpret($ast);
     say $res;
     ok $res[0] eq -144, "Calculates to -144";
     ok $res[1] eq -4, "Should be -4";
@@ -28,13 +28,13 @@ else {
     say "Failed to parse";
 }
 
-my $code = q:to/END/;
+$code = q:to/END/;
 "4" + 4;
 END
 
 $ast = $parser.parse($code, :actions($actions)).made;
 if $ast {
-    dies-ok { $interpreter.evaluate($ast) }, "Should die because operands must both either be strings or numbers, when using + operator.";
+    dies-ok { $interpreter.interpret($ast) }, "Should die because operands must both either be strings or numbers, when using + operator.";
 }
 else {
     say "Failed to parse";
@@ -46,7 +46,7 @@ END
 
 $ast = $parser.parse($code, :actions($actions)).made;
 if $ast {
-    dies-ok { $interpreter.evaluate($ast) }, "Should die because operand must be a number, when using * operator.";
+    dies-ok { $interpreter.interpret($ast) }, "Should die because operand must be a number, when using * operator.";
 }
 else {
     say "Failed to parse";

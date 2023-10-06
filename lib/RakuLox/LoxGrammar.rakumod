@@ -181,7 +181,7 @@ grammar LoxGrammar {
     }
 
     token identifier {
-        [<:alpha> | '_'] \w*
+        [<:alpha> | '_'] [<:alpha> | '_' | \d]*
     }
 
     token number {

@@ -2,11 +2,14 @@ use RakuLox::LoxAST;
 class LoxActions {
 
     method TOP($/) {
+        my @statements;
         my $top = Top.new;
         for $<declaration> -> $decl {
-            $top.declarations.push($decl.made);
+            # $top.declarations.push($decl.made);
+            @statements.push($decl.made);
         }
-        make $top;
+        # make $top;
+        make @statements;
     }
 
     method declaration($/) {
@@ -25,17 +28,21 @@ class LoxActions {
         make ~$/;
     }
 
+    method print-stmt($/) {
+        say "print stmt --- -";
+        make Print.new(expression => $<expression>.made);
+    }
+
     method expr-stmt($/) {
-        make ExprStmt.new($<expression>.made);
+        make $<expression>.made;
     }
 
     method expression($/) {
-        make Expression.new(expression => $<assignment>.made);
+        make $<assignment>.made;
     }
 
     multi method assignment($/ where $<logic-or>) {
-        #say "-> -> -> -> -> -> -> -> -> making logic or";
-        make $<logic-or>.made;
+        make Assign.new(name=> 'name', value=> $<logic-or>.made);
     }
 
     multi method assignment($/ where !$<logic-or>) {

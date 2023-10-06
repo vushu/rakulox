@@ -28,7 +28,7 @@ END
 
 my $ast = $parser.parse($code, :actions($actions)).made;
 ok $ast, "Successfully parsed";
-my $result = $interpreter.evaluate($ast);
+my $result = $interpreter.interpret($ast);
 ok $result[0] eq -5, "Calculates to -5";
 ok $result[1] eq 90, "Calculates to 90";
 ok $result[2] eq "abcdefg", "Should be abcdefg";

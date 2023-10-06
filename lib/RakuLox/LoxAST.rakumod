@@ -10,7 +10,7 @@ class Binary is Expr {
 
 
 class Top is Expr {
-    has Expr @.declarations is rw;
+    has Stmt @.declarations is rw;
 }
 
 class Declaration is Expr {
@@ -30,16 +30,10 @@ class ExprStmt is Expr {
     }
 }
 
-class Expression is Stmt {
-    has Expr $.expression;
+class Assign is Expr {
+    has Str $.name;
+    has Expr $.value;
 }
-
-#class Assignment is Expr {
-#has Expr @.;
-#method new ($expression) {
-#self.bless(:$expression)
-#}
-#}
 
 class Unary is Expr {
     has Str $.op;

@@ -1,0 +1,24 @@
+use Test;
+use lib "lib";
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+print 2 + 2;
+END
+
+
+my $statements = $parser.parse($code, :actions($actions)).made;
+ok $statements, "Successfully parsed";
+if ($statements) {
+    my $result = $interpreter.intepret($statements);
+    say $result;
+}
+
+done-testing;
+

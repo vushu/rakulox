@@ -1,13 +1,25 @@
 use RakuLox::LoxAST;
 unit class LoxInterpreter;
 
-multi method evaluate(Top $node) {
+method interpret(@statements) {
     my @result;
-    #say "TOP AST, number of declarations: ", $node.declarations.elems;
-    for $node.declarations -> $decl {
-        @result.push(self.evaluate($decl));
+    for @statements -> $stmt {
+        @result.push(self.evaluate($stmt));
     }
     return @result;
+}
+
+# multi method evaluate(Top $node) {
+#     my @result;
+#     #say "TOP AST, number of declarations: ", $node.declarations.elems;
+#     for $node.declarations -> $decl {
+#         @result.push(self.evaluate($decl));
+#     }
+#     return @result;
+# }
+
+multi method evaluate(Print $node) {
+    say "print node";
 }
 
 multi method evaluate(ClassDeclaration $node) {
@@ -20,8 +32,8 @@ multi method evaluate(ExprStmt $node) {
     self.evaluate($node.expression);
 }
 
-multi method evaluate(Expression $node) {
-    self.evaluate($node.expression);
+multi method evaluate(Assign $node) {
+    self.evaluate($node.value);
 }
 
 multi method evaluate(Literal $node) {
