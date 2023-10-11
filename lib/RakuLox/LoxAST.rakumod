@@ -23,6 +23,12 @@ class Declaration is Expr {
 class Statement is Expr {
 }
 
+#Expression statement
+class Expression is Stmt {
+    has Expr $.expression
+
+}
+
 class ExprStmt is Expr {
     has Stmt $.expression;
     method new ($expression) {
@@ -64,6 +70,15 @@ class Literal is Expr {
 
 class Print is Stmt {
     has $.expression;
+}
+
+class While is Stmt {
+    has Expr $.condition;
+    has Stmt $.body;
+}
+
+class Block is Stmt {
+    has @.statements;
 }
 
 

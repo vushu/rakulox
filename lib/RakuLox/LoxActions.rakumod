@@ -16,6 +16,15 @@ class LoxActions {
         make $<declaration>.made;
     }
 
+    #multi method statement($/ where $<print-stmt>){
+        #say "print statmement";
+        #make $<print-stmt>.made;
+    #}
+
+    method block($/) {
+        make Block.new(statements => $<declaration>.map: *.made);
+    }
+
     method statement($/){
         make $<statement>.made;
     }
@@ -28,21 +37,29 @@ class LoxActions {
         make ~$/;
     }
 
+    method while-stmt($/) {
+        make While.new(condition => $<expression>.made, body => $<statement>.made);
+    }
+
     method print-stmt($/) {
-        say "print stmt --- -";
+        say "making print";
         make Print.new(expression => $<expression>.made);
     }
 
     method expr-stmt($/) {
-        make $<expression>.made;
+        make Expression.new(expression => $<expression>.made);
     }
 
     method expression($/) {
         make $<assignment>.made;
     }
 
-    multi method assignment($/ where $<logic-or>) {
+    multi method assignment($/ where $<assignment>) {
         make Assign.new(name=> 'name', value=> $<logic-or>.made);
+    }
+
+    multi method assignment($/) {
+        make $<logic-or>.made;
     }
 
     multi method assignment($/ where !$<logic-or>) {
@@ -61,7 +78,6 @@ class LoxActions {
     }
 
     multi method equality($/){
-        #say "Equality.";
         make make-node($<comparison>, $<equality-op>);
     }
 
@@ -112,7 +128,7 @@ class LoxActions {
         make Literal.new(value=> $value);
     }
 
-    method boolean($/) { make ($/ == 'true') }
+    method boolean($/) { make ($/ eq 'true') }
     method nil($/) { make ~$/ }
     method this($/) { make ~$/ }
     method group-expression($/) {

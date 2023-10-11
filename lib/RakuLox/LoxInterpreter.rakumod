@@ -9,17 +9,24 @@ method interpret(@statements) {
     return @result;
 }
 
-# multi method evaluate(Top $node) {
-#     my @result;
-#     #say "TOP AST, number of declarations: ", $node.declarations.elems;
-#     for $node.declarations -> $decl {
-#         @result.push(self.evaluate($decl));
-#     }
-#     return @result;
-# }
-
 multi method evaluate(Print $node) {
-    say "print node";
+    say self.evaluate($node.expression);
+}
+
+multi method evaluate(While $node) {
+    while self.evaluate($node.condition) {
+        self.evaluate($node.body);
+    }
+}
+
+multi method evaluate(Block $node){
+    for $node.statements -> $statement {
+        self.evaluate($statement);
+    }
+}
+
+multi method evaluate(Expression $node) {
+    self.evaluate($node.expression);
 }
 
 multi method evaluate(ClassDeclaration $node) {

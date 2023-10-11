@@ -10,13 +10,18 @@ my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
 print 2 + 2;
+32 + 2;
+while(false) {
+    print 2 + 5;
+    print 13 + 5;
+}
 END
 
 
 my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
-    my $result = $interpreter.intepret($statements);
+    my $result = $interpreter.interpret($statements);
     say $result;
 }
 
