@@ -81,5 +81,16 @@ class Block is Stmt {
     has @.statements;
 }
 
+class Var is Stmt {
+    has Expr $.name;
+    has Expr $.initializer;
+}
+
+class Variable is Expr {
+    has Str $.name;
+}
+
+class Nothing is Expr {}
+
 
 

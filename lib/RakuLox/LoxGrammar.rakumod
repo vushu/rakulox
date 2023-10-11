@@ -252,7 +252,7 @@ grammar LoxGrammar {
     }
 
     rule var-decl {
-        'var' <identifier> ['=' <expression>]? ';'
+        'var' <identifier> [<assignment-op> <expression>]? ';'
     }
 
 }

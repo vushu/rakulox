@@ -34,7 +34,7 @@ class LoxActions {
     }
 
     method identifier ($/) {
-        make ~$/;
+        make Variable.new(name => ~$/);
     }
 
     method while-stmt($/) {
@@ -126,6 +126,15 @@ class LoxActions {
             when $<super-class> { $<super-class>.made };
         }
         make Literal.new(value=> $value);
+    }
+
+    multi method var-decl($/) {
+        make Var.new(name => $<identifier>.made, initializer => $<expression>.made);
+    }
+
+    multi method var-decl($/ where !$<assignment-op>) {
+        make Var.new(name => $<identifier>.made, initializer => Nothing.new );
+
     }
 
     method boolean($/) { make ($/ eq 'true') }

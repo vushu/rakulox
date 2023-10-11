@@ -1,5 +1,8 @@
 use RakuLox::LoxAST;
+use RakuLox::LoxEnvironment;
 unit class LoxInterpreter;
+
+has LoxEnvironment $.environment = LoxEnvironment.new;
 
 method interpret(@statements) {
     my @result;
@@ -17,6 +20,14 @@ multi method evaluate(While $node) {
     while self.evaluate($node.condition) {
         self.evaluate($node.body);
     }
+}
+
+multi method evaluate(Var $node) {
+   $.environment.define($node.name, self.evaluate($node.initializer));
+}
+
+multi method evaluate(Nothing $node) {
+    "Nothing";
 }
 
 multi method evaluate(Block $node){
