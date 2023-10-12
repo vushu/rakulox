@@ -9,8 +9,9 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
-var result = 2 + 2;
-var foo;
+var a = 5;
+var b = 2;
+print a + b;
 END
 
 

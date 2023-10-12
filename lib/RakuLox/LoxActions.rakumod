@@ -117,15 +117,15 @@ class LoxActions {
 
     multi method primary($/ where !$<group-expression>) {
         my $value = do given $/ {
-            when $<boolean> { $<boolean>.made };
-            when $<nil> { $<nil>.made };
+            when $<boolean> { Literal.new(value => $<boolean>.made) };
+            when $<nil> { Literal.new(value => $<nil>.made) };
             when $<this> { $<this>.made };
-            when $<number> { $<number>.made };
-            when $<string> { $<string>.made };
+            when $<number> { Literal.new(value => $<number>.made) };
+            when $<string> { Literal.new(value=>$<string>.made) };
             when $<identifier> { $<identifier>.made };
             when $<super-class> { $<super-class>.made };
         }
-        make Literal.new(value=> $value);
+        make $value;
     }
 
     multi method var-decl($/) {
