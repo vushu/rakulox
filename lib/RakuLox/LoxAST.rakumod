@@ -82,7 +82,7 @@ class Block is Stmt {
 }
 
 class Var is Stmt {
-    has Expr $.name;
+    has Str $.name;
     has Expr $.initializer;
 }
 

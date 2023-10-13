@@ -23,8 +23,7 @@ multi method evaluate(While $node) {
 }
 
 multi method evaluate(Var $node) {
-    #needs to get redone i think
-    $.environment.define($node.name.name, self.evaluate($node.initializer));
+    $.environment.define($node.name, self.evaluate($node.initializer));
 }
 
 multi method evaluate(Nothing $node) {
@@ -32,7 +31,6 @@ multi method evaluate(Nothing $node) {
 }
 
 multi method evaluate(Variable $node) {
-    say "Getting node variable ", $node.name;
     $.environment.get($node.name);
 }
 

@@ -121,7 +121,7 @@ class LoxActions {
             when $<nil> { Literal.new(value => $<nil>.made) };
             when $<this> { $<this>.made };
             when $<number> { Literal.new(value => $<number>.made) };
-            when $<string> { Literal.new(value=>$<string>.made) };
+            when $<string> { Literal.new(value => $<string>.made) };
             when $<identifier> { $<identifier>.made };
             when $<super-class> { $<super-class>.made };
         }
@@ -129,11 +129,12 @@ class LoxActions {
     }
 
     multi method var-decl($/) {
-        make Var.new(name => $<identifier>.made, initializer => $<expression>.made);
+        # here we only want the name as Str
+        make Var.new(name => ~$<identifier>, initializer => $<expression>.made);
     }
 
     multi method var-decl($/ where !$<assignment-op>) {
-        make Var.new(name => $<identifier>.made, initializer => Nothing.new );
+        make Var.new(name => ~$<identifier>, initializer => Nothing.new );
 
     }
 
