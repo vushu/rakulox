@@ -55,7 +55,9 @@ multi method evaluate(ExprStmt $node) {
 }
 
 multi method evaluate(Assign $node) {
-    self.evaluate($node.value);
+    my $res = self.evaluate($node.value);
+    $.environment.assign($node.name, $res);
+    return $res;
 }
 
 multi method evaluate(Literal $node) {

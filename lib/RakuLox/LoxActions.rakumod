@@ -54,17 +54,12 @@ class LoxActions {
         make $<assignment>.made;
     }
 
-    multi method assignment($/ where $<assignment>) {
-        make Assign.new(name=> 'name', value=> $<logic-or>.made);
+    multi method assignment($/ where $<assignment-op>) {
+        make Assign.new(name=> ~$<identifier>, value=> $<logic-or>.made);
     }
 
-    multi method assignment($/) {
+    multi method assignment($/ where !$<assignment-op>) {
         make $<logic-or>.made;
-    }
-
-    multi method assignment($/ where !$<logic-or>) {
-        #say "Paren dot identifier";
-        die "Please implement";
     }
 
     multi method logic-or($/) {

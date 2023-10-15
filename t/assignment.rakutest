@@ -9,12 +9,8 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
-var a = 5;
-var b = 2;
-print a + b;
 var foo = "before";
-print foo;
-var foo = "after";
+foo = "after";
 print foo;
 END
 

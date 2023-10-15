@@ -66,8 +66,7 @@ grammar LoxGrammar {
     }
 
     rule assignment {
-        | <identifier> <paren-dot-identifier>* <assignment-op> <assignment>
-        | <logic-or>
+        [<identifier> <paren-dot-identifier>* <assignment-op>]? <logic-or>
     }
 
     rule logic-or {
