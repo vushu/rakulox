@@ -1,96 +1,95 @@
-class Expr {}
-class Stmt {}
+class ASTNode {}
 
-class Binary is Expr {
-    has Expr $.left;
-    has Expr $.right;
+class Binary is ASTNode {
+    has ASTNode $.left;
+    has ASTNode $.right;
     has Str $.op;
 }
 
 
 
-class Top is Expr {
-    has Stmt @.declarations is rw;
+class Top is ASTNode {
+    has ASTNode @.declarations is rw;
 }
 
-class Declaration is Expr {
-    has Expr $.declaration;
+class Declaration is ASTNode {
+    has ASTNode $.declaration;
     method new ($declaration) {
         self.bless(:$declaration);
     }
 }
 
-class Statement is Expr {
+class Statement is ASTNode {
 }
 
 #Expression statement
-class Expression is Stmt {
-    has Expr $.expression
+class Expression is ASTNode {
+    has ASTNode $.expression
 
 }
 
-class ExprStmt is Expr {
-    has Stmt $.expression;
+class ExprStmt is ASTNode {
+    has ASTNode $.expression;
     method new ($expression) {
         self.bless(:$expression)
     }
 }
 
-class Assign is Expr {
+class Assign is ASTNode {
     has Str $.name;
-    has Expr $.value;
+    has ASTNode $.value;
 }
 
-class Unary is Expr {
+class Unary is ASTNode {
     has Str $.op;
-    has Expr $.right;
+    has ASTNode $.right;
 }
 
-class ClassDeclaration is Expr {
+class ClassDeclaration is ASTNode {
     has Str $.identifier;
 }
 
-class VarDecl is Expr {
+class VarDecl is ASTNode {
     has Str $.identifier;
-    has Expr $.expression;
+    has ASTNode $.expression;
 }
 
-class Call is Expr {
+class Call is ASTNode {
 
 }
 
-class Grouping is Expr {
-    has Expr $.expression;
+class Grouping is ASTNode {
+    has ASTNode $.expression;
 }
 
-class Literal is Expr {
+class Literal is ASTNode {
     has $.value;
 }
 
 
-class Print is Stmt {
+class Print is ASTNode {
     has $.expression;
 }
 
-class While is Stmt {
-    has Expr $.condition;
-    has Stmt $.body;
+class While is ASTNode {
+    has ASTNode $.condition;
+    has ASTNode $.body;
 }
 
-class Block is Stmt {
+class Block is ASTNode {
     has @.statements;
 }
 
-class Var is Stmt {
+class Var is ASTNode {
     has Str $.name;
-    has Expr $.initializer;
+    has ASTNode $.initializer;
 }
 
-class Variable is Expr {
+class Variable is ASTNode {
     has Str $.name;
 }
 
-class Nothing is Expr {}
+class Nothing is ASTNode {}
 
 
 

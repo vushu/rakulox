@@ -159,9 +159,9 @@ class LoxActions {
     }
 }
 
-sub make-node(@collection, @ops) returns Expr {
-    my @ast-nodes of Expr = @collection.map: *.made;
-    my Expr $expr = @ast-nodes.shift;
+sub make-node(@collection, @ops) returns ASTNode {
+    my @ast-nodes of ASTNode = @collection.map: *.made;
+    my ASTNode $expr = @ast-nodes.shift;
     for @ast-nodes -> $node {
         $expr = Binary.new(left => $expr, right => $node, op => @ops.shift.Str);
         $expr.op;
