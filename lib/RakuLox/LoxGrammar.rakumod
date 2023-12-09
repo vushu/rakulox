@@ -56,17 +56,8 @@ grammar LoxGrammar {
         <assignment>
     }
 
-    # There is ambiguity in the <call> rule itself and the rule call '.' <identifier>
-    # since raku grammar does depth first search it will end up matching on the <call> rule only
-    # and will never match on <call> '.' <identifier>
-    # when it fails, it will travel through <logic-or> and match on the <call> rule.
-    # To resolve this ambiguity problem we make this solution instead.
-    token paren-dot-identifier {
-        <paren-call>? <dot-op> <identifier>
-    }
-
     rule assignment {
-        [<identifier> <paren-dot-identifier>* <assignment-op>]? <logic-or>
+        [<call> '.']? <logic-or>+ % <assignment-op>
     }
 
     rule logic-or {
