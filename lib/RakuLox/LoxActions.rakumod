@@ -30,7 +30,7 @@ class LoxActions {
     }
 
     method class-decl ($/) {
-        make ClassDeclaration.new(identifier => $<identifier>[0].made);
+        make ClassDeclaration.new(identifier => ($<identifier>[0].made).name);
     }
 
     method identifier ($/) {
