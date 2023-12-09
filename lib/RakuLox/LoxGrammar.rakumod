@@ -49,8 +49,6 @@ grammar LoxGrammar {
         '{' ~ '}' <declaration>*
     }
 
-
-
     # Expressions
     rule expression {
         <assignment>
@@ -163,12 +161,12 @@ grammar LoxGrammar {
     }
 
     token string {
-        '"' ~ '"' <string-content>
+        '"' <(.*?)> '"'
     }
 
-    token string-content {
-        \w*
-    }
+    # token string-content {
+    #     (.*?)
+    # }
 
     token identifier {
         [<:alpha> | '_'] [<:alpha> | '_' | \d]*

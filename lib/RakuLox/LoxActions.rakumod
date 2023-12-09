@@ -55,11 +55,11 @@ class LoxActions {
     }
 
     multi method assignment($/ where $<assignment-op>) {
-        make Assign.new(name=> ~$<identifier>, value=> $<logic-or>.made);
+        make Assign.new(name=> ($<logic-or>[0].made).name, value=> $<logic-or>[1].made);
     }
 
     multi method assignment($/ where !$<assignment-op>) {
-        make $<logic-or>.made;
+        make $<logic-or>[0].made;
     }
 
     multi method logic-or($/) {
@@ -155,7 +155,7 @@ class LoxActions {
     }
 
     method string($/) {
-        make ~$<string-content>;
+        make ~$/
     }
 }
 
