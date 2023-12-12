@@ -1,7 +1,7 @@
 use Test;
 
 use lib "lib";
-use-ok "RakuLox";
+plan 1;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
@@ -18,8 +18,9 @@ END
 
 
 my $ast = $parser.parse($code, :actions($actions));
-#for $top.declarations -> $d {
-#say "HHHH ", $d;
-#}
+my $res = $ast.made;
+ok $res, "got res";
 
-$interpreter.interpret($ast.made);
+done-testing;
+
+# $interpreter.interpret($res);

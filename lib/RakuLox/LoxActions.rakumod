@@ -87,21 +87,20 @@ class LoxActions {
     }
 
     method factor($/){
-        #say "Factor ", $<factor-op>;
         make make-node($<unary>, $<factor-op>);
     }
 
     multi method unary($/ where $<unary-op>) {
         my $op = $<unary-op>.Str;
-        my $unary = Unary.new(op => $op, right => $<call>.made);
+        my $unary = Unary.new(op => $op, right => $<unary>.made);
         make $unary;
     }
 
-    multi method unary($/ where !$<unary-op>){
+    multi method unary($/ where $<call>){
         make $<call>.made;
     }
 
-    method call($/ where !$<call-tail>) {
+    method call($/) {
         # Skipping call
         make $<primary>.made;
     }

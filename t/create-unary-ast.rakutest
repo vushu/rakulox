@@ -1,7 +1,7 @@
 use Test;
 
 use lib "lib";
-use-ok "RakuLox";
+plan 4;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
@@ -52,3 +52,4 @@ else {
     say "Failed to parse";
 }
 
+done-testing;

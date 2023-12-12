@@ -105,7 +105,7 @@ grammar LoxGrammar {
     }
 
     rule unary {
-        <unary-op>? <call>
+        <unary-op> <unary> | <call>
     }
 
     token unary-op {
@@ -114,19 +114,7 @@ grammar LoxGrammar {
     }
 
     rule call {
-        <primary> <call-tail>*
-    }
-
-    rule call-tail {
-        <paren-call> | <dot-call>
-    }
-
-    rule paren-call {
-        '(' ~ ')' <arguments>?
-    }
-
-    rule dot-call {
-        '.' <identifier>
+        <primary> ['(' <arguments>? ')' | '.' <identifier>]* 
     }
 
     rule primary {
@@ -163,10 +151,6 @@ grammar LoxGrammar {
     token string {
         '"' <(.*?)> '"'
     }
-
-    # token string-content {
-    #     (.*?)
-    # }
 
     token identifier {
         [<:alpha> | '_'] [<:alpha> | '_' | \d]*

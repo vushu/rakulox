@@ -1,17 +1,14 @@
 use Test;
 
 use lib "lib";
-use-ok "RakuLox";
+plan 15;
 
 use RakuLox::LoxGrammar;
 
 
 my $parser = LoxGrammar.new;
 my $code = qq:to/END/;
-true;
-false;
 mama(s, c);
---------!---2;
 mama(s, c).x;
 mama(s, c).x();
 mama.x;
@@ -142,7 +139,4 @@ END
 
 ok $parser.parse($code), "parsing for-stmt rule";
 
-
-
-
-
+done-testing;

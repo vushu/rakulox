@@ -1,9 +1,9 @@
 use Test;
 
 use lib "lib";
-use-ok "RakuLox";
 
 use RakuLox::LoxActions;
+done-testing;
 
 
 

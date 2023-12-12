@@ -1,6 +1,7 @@
 use Test;
 
 use lib "lib";
+plan 2;
 use-ok "RakuLox";
 
 use RakuLox::LoxGrammar;
@@ -14,3 +15,4 @@ END
 ok $parser.parse($code), "parsing assignment rule";
 
 
+done-testing;

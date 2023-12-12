@@ -74,11 +74,11 @@ multi method evaluate(Binary $node) {
             +$left - +$right;
         }
         when "/" {
-            self.check-number-operands("-", $left, $right);
+            self.check-number-operands("/", $left, $right);
             +$left / +$right;
         }
         when "*" {
-            self.check-number-operands("-", $left, $right);
+            self.check-number-operands("*", $left, $right);
             +$left * +$right;
         }
         when "+" {

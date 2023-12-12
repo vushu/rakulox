@@ -7,7 +7,7 @@
   "description": "A brand new and very nice module",
   "name": "RakuLox",
   "provides": {
-    "RakuLox": "lib/RakuLox.rakumod"
+    "RakuLox": "lib/RakuLox/LoxGrammar.rakumod"
   },
   "resources": [
   ],

@@ -1,7 +1,7 @@
 use Test;
 
 use lib "lib";
-#use-ok "RakuLox";
+plan 10;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
