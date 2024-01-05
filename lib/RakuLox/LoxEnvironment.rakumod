@@ -1,17 +1,26 @@
 unit class LoxEnvironment;
 
 has %.values;
+has LoxEnvironment $.enclosing;
+
+multi method new(LoxEnvironment $enclosing) {
+    self.bless(:$enclosing);
+}
 
 method define($name, $value){
     %.values{$name} = $value;
 }
 
 method get($name) {
-    die "Undefined variable $name." if %.values{$name}:!exists;
-    return %.values{$name};
+    return %.values{$name} if %.values{$name}:exists;
+    return $.enclosing.get($name) if $.enclosing;
+
+    die "Undefined variable $name.";
 }
 
 method assign($name, $value) {
-    die "Undefined variable $name." if %.values{$name}:!exists;
-    %.values{$name} = $value;
+    return %.values{$name} = $value if %.values{$name}:exists;
+    return %.environment.assign($name) if $.enclosing;
+
+    die "Undefined variable $name.";
 }

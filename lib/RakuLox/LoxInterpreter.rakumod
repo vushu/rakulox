@@ -35,9 +35,14 @@ multi method evaluate(Variable $node) {
 }
 
 multi method evaluate(Block $node){
-    for $node.statements -> $statement {
-        self.evaluate($statement);
+    my LoxEnvironment $previous = $.environment;
+    try {
+        $.environment = LoxEnvironment.new($previous);
     }
+
+    # for $node.statements -> $statement {
+    #     self.evaluate($statement);
+    # }
 }
 
 multi method evaluate(Expression $node) {

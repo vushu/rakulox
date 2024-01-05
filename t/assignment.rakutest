@@ -19,7 +19,8 @@ my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
     my $result = $interpreter.interpret($statements);
-    say $result;
+    ok $result[1] eq "after", "Should be after";
+
 }
 
 done-testing;

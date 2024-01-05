@@ -1,0 +1,42 @@
+use Test;
+
+use lib 'lib';
+plan 1;
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+  var a = "outer a";
+  var b = "outer b";
+  {
+    var a = "inner a";
+    print a;
+    print b;
+    print c;
+  }
+  print a;
+  print b;
+  print c;
+}
+print a;
+print b;
+print c;
+END
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+my $result = $interpreter.interpret($ast);
+
+done-testing;
