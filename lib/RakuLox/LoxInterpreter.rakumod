@@ -2,7 +2,7 @@ use RakuLox::LoxAST;
 use RakuLox::LoxEnvironment;
 unit class LoxInterpreter;
 
-has LoxEnvironment $.environment = LoxEnvironment.new;
+has LoxEnvironment $.environment is rw = LoxEnvironment.new;
 
 method interpret(@statements) {
     my @result;
@@ -38,11 +38,13 @@ multi method evaluate(Block $node){
     my LoxEnvironment $previous = $.environment;
     try {
         $.environment = LoxEnvironment.new($previous);
+        for $node.statements -> $statement {
+            self.evaluate($statement);
+        }
     }
-
-    # for $node.statements -> $statement {
-    #     self.evaluate($statement);
-    # }
+    LEAVE  {
+        $.environment = $previous;
+    }
 }
 
 multi method evaluate(Expression $node) {

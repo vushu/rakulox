@@ -42,7 +42,6 @@ class LoxActions {
     }
 
     method print-stmt($/) {
-        say "making print";
         make Print.new(expression => $<expression>.made);
     }
 
