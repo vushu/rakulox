@@ -1,7 +1,7 @@
 use Test;
 
 use lib "lib";
-plan 15;
+plan 16;
 
 use RakuLox::LoxGrammar;
 
@@ -138,5 +138,12 @@ for (mama = 1; ; mama()) {}
 END
 
 ok $parser.parse($code), "parsing for-stmt rule";
+
+$code = q:to/END/;
+(2 + 2);
+END
+
+ok $parser.parse($code), "parsing group rule";
+
 
 done-testing;

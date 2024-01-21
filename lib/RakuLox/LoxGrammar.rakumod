@@ -1,4 +1,5 @@
-grammar LoxGrammar {
+use RakuLox::ErrorReport;
+grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
 
     token TOP {
         <declaration>*
@@ -225,6 +226,15 @@ grammar LoxGrammar {
 
     rule var-decl {
         'var' <identifier> [<assignment-op> <expression>]? ';'
+    }
+
+    method error($msg) {
+        my $parsed = self.target.substr(0, self.pos)\
+        .trim-trailing;
+        my $context = $parsed.substr($parsed.chars - 10 max 0) ~ ' 👈' ~ self.target.substr($parsed.chars, 10);
+        my $line-no = $parsed.lines.elems;
+        my $error-msg = "Oh 💩 I cannot parse: $msg\nat line $line-no, around:" ~ $context;
+        die $error-msg;
     }
 
 }
