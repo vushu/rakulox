@@ -92,8 +92,14 @@ class Variable is ASTNode {
 class IfStmt is ASTNode {
     has ASTNode $.condition;
     has ASTNode $.then-branch;
+}
+
+class IfStmtWithElse is ASTNode {
+    has ASTNode $.condition;
+    has ASTNode $.then-branch;
     has ASTNode $.else-branch;
 }
+
 
 class Nothing is ASTNode {}
 

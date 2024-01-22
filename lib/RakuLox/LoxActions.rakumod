@@ -104,6 +104,14 @@ class LoxActions {
         make $<primary>.made;
     }
 
+    multi method if-stmt($/ where !$<else-stmt>) {
+        make IfStmt.new(condition => $<expression>.made, then-branch => $<expression>.made);
+    }
+
+    multi method if-stmt($/) {
+        make IfStmtWithElse.new(condition => $<expression>.made, then-branch => $<expression>.made, else-branch => $<statement>.made);
+    }
+
     multi method primary($/ where $<group-expression>){
         make $<group-expression>.made
     }

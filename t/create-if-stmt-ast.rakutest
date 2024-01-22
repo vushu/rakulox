@@ -1,0 +1,47 @@
+use Test;
+
+use lib "lib";
+plan 6;
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+use RakuLox::LoxAST;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+if (1 > 2) {}
+END
+
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+if $ast {
+    ok $ast, "got an if-stmt AST";
+    ok (is $ast[0].WHAT, IfStmt), "Is IfStmt";
+}
+else {
+    say "Failed to parse";
+}
+my $code = q:to/END/;
+if (1 > 2) {
+
+}
+else {
+
+}
+END
+
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+if $ast {
+    ok $ast, "got an if-stmt AST";
+    ok (is $ast[0].WHAT, IfStmtWithElse), "Is IfStmtWithElse";
+}
+else {
+    say "Failed to parse";
+}
+
+done-testing;
