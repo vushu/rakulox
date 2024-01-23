@@ -1,7 +1,7 @@
 use Test;
 
 use lib 'lib';
-plan 1;
+plan 2;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
@@ -17,6 +17,27 @@ if (true) {
   print "heheh";
   print "heheh";
   print "heheh";
+}
+END
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+my $result = $interpreter.interpret($ast);
+
+$code = q:to/END/;
+if (false) {
+  print "heheh";
+  print "heheh";
+  print "heheh";
+  print "heheh";
+}
+else {
+  print "HOHO";
+  print "HOHO";
+  print "HOHO";
+  print "HOHO";
 }
 END
 

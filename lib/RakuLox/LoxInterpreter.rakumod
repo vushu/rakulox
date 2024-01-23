@@ -156,6 +156,7 @@ multi method evaluate(IfStmt $stmt) {
     }
     return Nil;
 }
+
 multi method evaluate(IfStmtWithElse $stmt) {
     if (self.evaluate($stmt.condition)) {
         self.evaluate($stmt.then-branch);
