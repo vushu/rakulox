@@ -148,3 +148,21 @@ multi method evaluate(Unary $node) {
 multi method evaluate(Grouping $node) {
     self.evaluate($node.expression);
 }
+
+multi method evaluate(IfStmt $stmt) {
+    if (self.evaluate($stmt.condition)) {
+        say "we are evaluating if then branch here";
+        self.evaluate($stmt.then-branch);
+    }
+    return Nil;
+}
+multi method evaluate(IfStmtWithElse $stmt) {
+    if (self.evaluate($stmt.condition)) {
+        self.evaluate($stmt.then-branch);
+    }
+    else {
+        self.evaluate($stmt.else-branch);
+    }
+    return Nil;
+}
+

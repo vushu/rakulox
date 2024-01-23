@@ -6,7 +6,11 @@ class Binary is ASTNode {
     has Str $.op;
 }
 
-
+class Logical is ASTNode {
+    has ASTNode $.left;
+    has ASTNode $.right;
+    has Str $.op;
+}
 
 class Top is ASTNode {
     has ASTNode @.declarations is rw;
