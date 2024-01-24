@@ -5,10 +5,8 @@ class LoxActions {
         my @statements;
         my $top = Top.new;
         for $<declaration> -> $decl {
-            # $top.declarations.push($decl.made);
             @statements.push($decl.made);
         }
-        # make $top;
         make @statements;
     }
 
@@ -102,10 +100,10 @@ class LoxActions {
     multi method if-stmt($/) {
         make IfStmtWithElse.new(condition => $<expression>.made, then-branch => $<statement>.made, else-branch => $<else-stmt>.made);
     }
-    method else-stmt($/) {
+
+    method else-branch($/) {
         make $<statement>.made;
     }
-
 
     multi method primary($/ where $<group-expression>){
         make $<group-expression>.made

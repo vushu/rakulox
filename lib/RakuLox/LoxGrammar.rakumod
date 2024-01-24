@@ -27,10 +27,10 @@ grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
     }
 
     rule if-stmt {
-        'if' '(' ~ ')' <expression> <statement> <else-stmt>?
+        'if' '(' ~ ')' <expression> <statement> <else-branch>?
     }
 
-    rule else-stmt {
+    rule else-branch {
         'else' <statement>
     }
 
