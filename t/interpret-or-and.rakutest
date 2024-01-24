@@ -1,0 +1,41 @@
+use Test;
+
+use lib 'lib';
+plan 2;
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+if (0 == 1 and 0 == 0) {
+  print "YAY TRUE Logical node";
+}
+END
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+my $result = $interpreter.interpret($ast);
+
+$code = q:to/END/;
+if (false or false) {
+  print "heheh";
+  print "heheh";
+  print "heheh";
+  print "heheh";
+}
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+$result = $interpreter.interpret($ast);
+
+done-testing;

@@ -16,11 +16,6 @@ class LoxActions {
         make $<declaration>.made;
     }
 
-    #multi method statement($/ where $<print-stmt>){
-        #say "print statmement";
-        #make $<print-stmt>.made;
-    #}
-
     method block($/) {
         make Block.new(statements => $<declaration>.map: *.made);
     }
@@ -62,13 +57,11 @@ class LoxActions {
     }
 
     multi method logic-or($/) {
-        #say "Inside normal logic or ";
-        make make-node($<logic-and>, $<or-op>);
+        make make-logical-node($<logic-and>, $<or-op>);
     }
 
     multi method logic-and($/) {
-        #say "Making logic and";
-        make make-node($<equality>, $<and-op>);
+        make make-logical-node($<equality>, $<and-op>);
     }
 
     multi method equality($/){
@@ -174,6 +167,16 @@ sub make-node(@collection, @ops) returns ASTNode {
     my ASTNode $expr = @ast-nodes.shift;
     for @ast-nodes -> $node {
         $expr = Binary.new(left => $expr, right => $node, op => @ops.shift.Str);
+        $expr.op;
+    }
+    return $expr;
+}
+
+sub make-logical-node(@collection, @ops) returns ASTNode {
+    my @ast-nodes of ASTNode = @collection.map: *.made;
+    my ASTNode $expr = @ast-nodes.shift;
+    for @ast-nodes -> $node {
+        $expr = Logical.new(left => $expr, right => $node, op => @ops.shift.Str);
         $expr.op;
     }
     return $expr;

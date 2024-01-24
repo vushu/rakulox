@@ -71,6 +71,18 @@ multi method evaluate(Literal $node) {
     return $node.value;
 }
 
+multi method evaluate(Logical $node) {
+    my $left = self.evaluate($node.left);
+
+    if $node.op eq "or" {
+        return $left if $left;
+    }
+    else {
+        return $left unless $left;
+    }
+    return self.evaluate($node.right);
+}
+
 multi method evaluate(Binary $node) {
     my $left = self.evaluate($node.left);
     my $right = self.evaluate($node.right);
@@ -151,7 +163,6 @@ multi method evaluate(Grouping $node) {
 
 multi method evaluate(IfStmt $stmt) {
     if (self.evaluate($stmt.condition)) {
-        say "we are evaluating if then branch here";
         self.evaluate($stmt.then-branch);
     }
     return Nil;
