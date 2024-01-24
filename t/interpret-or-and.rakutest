@@ -1,7 +1,7 @@
 use Test;
 
 use lib 'lib';
-plan 2;
+plan 7;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
@@ -24,7 +24,7 @@ ok $ast, "Successfully got and AST";
 my $result = $interpreter.interpret($ast);
 
 $code = q:to/END/;
-if (false or false) {
+if (false or true) {
   print "heheh";
   print "heheh";
   print "heheh";
@@ -38,4 +38,20 @@ ok $ast, "Successfully got and AST";
 
 $result = $interpreter.interpret($ast);
 
+$code = q:to/END/;
+false or true;
+false and true;
+true and false;
+true or false;
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+$result = $interpreter.interpret($ast);
+ok $result[0], "false or true is true";
+ok !$result[1], "false and true is false";
+ok !$result[2], "true and false is false";
+ok $result[3], "true or false is true";
 done-testing;

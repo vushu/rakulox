@@ -73,13 +73,11 @@ multi method evaluate(Literal $node) {
 
 multi method evaluate(Logical $node) {
     my $left = self.evaluate($node.left);
-
-    if $node.op eq "or" {
-        return $left if $left;
-    }
-    else {
-        return $left unless $left;
-    }
+    # if left operand is true then the or-expr is all together true
+    return $left if $node.op eq "or" and $left;
+    # if left operand is false then the and-expr is all together false
+    return $left if $node.op eq "and" and not $left;
+    # continue by evaluating the right
     return self.evaluate($node.right);
 }
 
