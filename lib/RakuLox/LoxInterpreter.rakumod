@@ -20,6 +20,7 @@ multi method evaluate(While $node) {
     while self.evaluate($node.condition) {
         self.evaluate($node.body);
     }
+    return Nil;
 }
 
 multi method evaluate(Var $node) {
@@ -62,9 +63,9 @@ multi method evaluate(ExprStmt $node) {
 }
 
 multi method evaluate(Assign $node) {
-    my $res = self.evaluate($node.value);
-    $.environment.assign($node.name, $res);
-    return $res;
+    my $value = self.evaluate($node.value);
+    $.environment.assign($node.name, $value);
+    return $value;
 }
 
 multi method evaluate(Literal $node) {

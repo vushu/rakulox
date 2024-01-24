@@ -19,8 +19,8 @@ method get($name) {
 }
 
 method assign($name, $value) {
-    return %.values{$name} = $value if %.values{$name}:exists;
-    return %.environment.assign($name) if $.enclosing;
+    return %.values{$name} = $value if %.values{$name}:exists ;
+    return $.enclosing.assign($name, $value) if $.enclosing;
 
     die "Undefined variable $name.";
 }

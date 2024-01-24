@@ -1,0 +1,30 @@
+use Test;
+
+use lib 'lib';
+plan 2;
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+var i = 0;
+while (i <= 10) {
+  print i;
+  i = i + 1;
+}
+true;
+END
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+my $result = $interpreter.interpret($ast);
+ok $result[2] eq True, "Reached true";
+
+done-testing;

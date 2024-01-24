@@ -69,12 +69,10 @@ class LoxActions {
     }
 
     method comparison($/){
-        #say "Comparison. ";
         make make-node($<term>, $<comparison-op>);
     }
 
     method term($/){
-        #say "Term. ";
         make make-node($<factor>, $<term-op>);
     }
 
