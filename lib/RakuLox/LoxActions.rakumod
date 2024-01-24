@@ -137,7 +137,7 @@ class LoxActions {
     }
 
     method boolean($/) { make ($/ eq 'true') }
-    method nil($/) { make ~$/ }
+    method nil($/) { make Nil }
     method this($/) { make ~$/ }
     method group-expression($/) {
         make Grouping.new(expression=>$<expression>.made);

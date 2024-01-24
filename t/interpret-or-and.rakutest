@@ -1,7 +1,7 @@
 use Test;
 
 use lib 'lib';
-plan 7;
+plan 11;
 
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
@@ -54,4 +54,20 @@ ok $result[0], "false or true is true";
 ok !$result[1], "false and true is false";
 ok !$result[2], "true and false is false";
 ok $result[3], "true or false is true";
+
+$code = q:to/END/;
+"hej" or false;
+nil or "Yes";
+"No this" and "but this";
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+$result = $interpreter.interpret($ast);
+ok $result[0] eq "hej", "should give hej";
+ok $result[1] eq "Yes", "should give Yes";
+ok $result[2] eq "but this", "should give but this";
+
 done-testing;
