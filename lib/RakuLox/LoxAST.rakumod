@@ -104,7 +104,6 @@ class IfStmtWithElse is ASTNode {
     has ASTNode $.else-branch;
 }
 
-
 class Nothing is ASTNode {}
 
 

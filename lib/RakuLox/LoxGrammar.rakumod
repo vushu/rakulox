@@ -18,12 +18,15 @@ grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
     }
 
     rule for-stmt {
-        'for' '('
-        [
-            | <var-decl>
-            | <expr-stmt>
-            | ';'
-        ] <expression>? ';' <expression>? ')' <statement>
+        'for' '(' [ 
+            | <initializer=var-decl>
+            | <initializer=expr-stmt>
+            | <semicolon>] 
+        <expression>? ';' <expression>? ')' <statement>
+    }
+
+    token semicolon {
+        ';'
     }
 
     rule if-stmt {

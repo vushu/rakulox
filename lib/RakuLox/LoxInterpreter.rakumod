@@ -58,7 +58,6 @@ multi method evaluate(ClassDeclaration $node) {
 }
 
 multi method evaluate(ExprStmt $node) {
-    #say "ExprStmt evaluate";
     self.evaluate($node.expression);
 }
 

@@ -34,8 +34,7 @@ else {
 }
 END
 
-
-my $ast = $parser.parse($code, :actions($actions)).made;
+$ast = $parser.parse($code, :actions($actions)).made;
 if $ast {
     ok $ast, "got an if-stmt AST";
     ok (is $ast[0].WHAT, IfStmtWithElse), "Is IfStmtWithElse";

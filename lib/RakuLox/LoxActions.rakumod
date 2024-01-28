@@ -3,7 +3,6 @@ class LoxActions {
 
     method TOP($/) {
         my @statements;
-        my $top = Top.new;
         for $<declaration> -> $decl {
             @statements.push($decl.made);
         }
@@ -32,6 +31,38 @@ class LoxActions {
 
     method while-stmt($/) {
         make While.new(condition => $<expression>.made, body => $<statement>.made);
+    }
+    
+    method for-stmt($/) {
+
+        my $body = $<statement>.made;
+        # handle increment
+        if $<expression>[1] { # Increment
+            my $block = Block.new;
+            $block.statements.push($body);
+            $block.statements.push(Expression.new(expression => $<expression>[1].made));
+            $body = $block;
+        }
+
+        # handle condition
+        my $condition;
+        if not $<expression>[0] { # if no conditions
+            $condition = Literal.new(True);
+        }
+        else {
+            $condition = $<expression>[0].made;
+        }
+
+        $body = While.new(condition => $condition, body => $body);
+
+        # handle initializer
+        if $<initializer> {
+            my $block = Block.new;
+            $block.statements.push($<initializer>.made);
+            $block.statements.push($body);
+            $body = $block;
+        }
+        make $body;
     }
 
     method print-stmt($/) {
@@ -156,6 +187,10 @@ class LoxActions {
     method string($/) {
         make ~$/
     }
+}
+
+sub made-if-exists($expression) {
+    $expression ?? $expression.made !! Nil;
 }
 
 sub make-node(@collection, @ops) returns ASTNode {

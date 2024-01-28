@@ -1,0 +1,46 @@
+use Test;
+
+use lib 'lib';
+plan 5;
+
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+use RakuLox::LoxAST;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+for (var i = 0; i < 10; i = i + 1) {
+  var res = 2 + i;
+}
+END
+
+my $ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+ok (is $ast[0].WHAT, Block), "Is Block";
+my $result = $interpreter.interpret($ast);
+
+$code = q:to/END/;
+var a = 0;
+var temp;
+
+for (var b = 1; a < 10000; b = temp + b) {
+  print a;
+  temp = a;
+  a = b;
+}
+temp;
+END
+
+$ast = $parser.parse($code, :actions($actions)).made;
+
+ok $ast, "Successfully got and AST";
+
+$result = $interpreter.interpret($ast);
+ok $result.tail eq 6765, "Fibbonachi result should be: 6765";
+done-testing;
