@@ -42,5 +42,5 @@ $ast = $parser.parse($code, :actions($actions)).made;
 ok $ast, "Successfully got and AST";
 
 $result = $interpreter.interpret($ast);
-ok $result.tail eq 6765, "Fibbonachi result should be: 6765";
+ok $result.tail eq 6765, "Fibonacci result should be: 6765";
 done-testing;
