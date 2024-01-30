@@ -119,8 +119,15 @@ class LoxActions {
         make $<call>.made;
     }
 
-    method call($/) {
-        # Skipping call
+    multi method call($/ where $<arguments>) {
+        my $expr = $<primary>.made;
+    }
+
+    multi method call($/ where $<identifier>) {
+        my $expr = $<primary>.made;
+    }
+
+    multi method call($/ where !$<identifier> && !$<arguments>) {
         make $<primary>.made;
     }
 
