@@ -120,23 +120,23 @@ class LoxActions {
     }
 
     multi method call($/ where $<arguments>) {
-        my $expr = $<primary>.made;
+        my $expr = $<arguments>.made;
     }
 
     multi method call($/ where $<identifier>) {
-        my $expr = $<primary>.made;
+        my $expr = $<identifier>.made;
     }
 
     multi method call($/ where !$<identifier> && !$<arguments>) {
         make $<primary>.made;
     }
 
-    multi method if-stmt($/ where !$<else-stmt>) {
+    multi method if-stmt($/ where !$<else-branch>) {
         make IfStmt.new(condition => $<expression>.made, then-branch => $<statement>.made);
     }
 
     multi method if-stmt($/) {
-        make IfStmtWithElse.new(condition => $<expression>.made, then-branch => $<statement>.made, else-branch => $<else-stmt>.made);
+        make IfStmtWithElse.new(condition => $<expression>.made, then-branch => $<statement>.made, else-branch => $<else-branch>.made);
     }
 
     method else-branch($/) {
