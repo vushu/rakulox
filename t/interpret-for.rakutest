@@ -37,10 +37,21 @@ for (var b = 1; a < 10000; b = temp + b) {
 temp;
 END
 
+my $a = 0;
+my $temp;
+my $b = 1;
+
+while $a < 10000  {
+  say $a;
+  $temp = $a;
+  $a = $b;
+  $b = $temp + $b;
+}
+
 $ast = $parser.parse($code, :actions($actions)).made;
 
 ok $ast, "Successfully got and AST";
 
 $result = $interpreter.interpret($ast);
-ok $result.tail eq 6765, "Fibonacci result should be: 6765";
+ok $result.tail eq $temp, "The last sequence should be: 6765";
 done-testing;
