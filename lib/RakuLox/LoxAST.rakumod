@@ -59,7 +59,7 @@ class VarDecl is ASTNode {
 }
 
 class Call is ASTNode {
-    has Str $.paren;
+    # has Str $.paren;
     has ASTNode $.callee;
     has ASTNode @.arguments;
 
@@ -105,6 +105,10 @@ class IfStmtWithElse is ASTNode {
     has ASTNode $.condition;
     has ASTNode $.then-branch;
     has ASTNode $.else-branch;
+}
+
+class Arguments is ASTNode {
+    has ASTNode @.arguments;
 }
 
 class Nothing is ASTNode {}

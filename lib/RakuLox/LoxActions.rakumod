@@ -119,16 +119,20 @@ class LoxActions {
         make $<call>.made;
     }
 
-    multi method call($/ where $<arguments>) {
-        my $expr = $<arguments>.made;
+    multi method call($/ where $<calling>) {
+        my ASTNode @exprs = $<calling>.map: *.made;
+        make Call.new(callee => $<primary>.made, arguments => @exprs);
     }
 
-    multi method call($/ where $<identifier>) {
-        my $expr = $<identifier>.made;
-    }
-
-    multi method call($/ where !$<identifier> && !$<arguments>) {
+    multi method call($/ where !$<calling>) {
         make $<primary>.made;
+    }
+
+    method arguments($/) {
+        if $<arguments>.elems ge 255 {
+            die "Can't have more than 255 arguments.";
+        }
+        make Arguments.new(arguments => $<expression>.map: *.made);
     }
 
     multi method if-stmt($/ where !$<else-branch>) {
@@ -167,7 +171,6 @@ class LoxActions {
 
     multi method var-decl($/ where !$<assignment-op>) {
         make Var.new(name => ~$<identifier>, initializer => Nothing.new );
-
     }
 
     method boolean($/) { make ($/ eq 'true') }
