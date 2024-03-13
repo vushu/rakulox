@@ -10,15 +10,19 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
-call(a, b, c).amama;
+var a = "global a";
+var b = "global b";
+var c = "global c";
+var c4 = "global c4";
+call(a, b, c);
 END
 
 
 my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
-    # my $result = $interpreter.interpret($statements);
-    # say $result;
+    my $result = $interpreter.interpret($statements);
+    say $result;
 }
 
 done-testing;

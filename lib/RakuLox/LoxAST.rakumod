@@ -62,7 +62,6 @@ class Call is ASTNode {
     # has Str $.paren;
     has ASTNode $.callee;
     has ASTNode @.arguments;
-
 }
 
 class Grouping is ASTNode {

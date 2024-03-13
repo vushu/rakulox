@@ -1,6 +1,13 @@
 use RakuLox::LoxAST;
 use RakuLox::LoxEnvironment;
+
 unit class LoxInterpreter;
+
+class LoxCallable {
+    method call(LoxInterpreter $interpreter, @arguments) {
+        die "Please implement me";
+    }
+}
 
 has LoxEnvironment $.environment is rw = LoxEnvironment.new;
 
@@ -174,5 +181,28 @@ multi method evaluate(IfStmtWithElse $stmt) {
         self.evaluate($stmt.else-branch);
     }
     return Nil;
+}
+
+multi method evaluate(Arguments $node) {
+    my @arguments;
+    for $node.arguments -> $arg {
+        @arguments.push(self.evaluate($arg));
+    }
+    return @arguments;
+   
+}
+
+multi method evaluate(Call $node) {
+    # my $callee = self.evaluate($node.callee);
+    my @evaluated_arguments;
+    # say $node.arguments;
+    for $node.arguments -> $arg {
+        @evaluated_arguments.push(self.evaluate($arg));
+        # my @arguments = $node.arguments.map: &self.evaluate;
+    }
+    @evaluated_arguments;
+    # my @arguments = $node.arguments.map: &self.evaluate;
+    # my LoxCallable $function = $callee;
+    # $function.call(self, @arguments);
 }
 
