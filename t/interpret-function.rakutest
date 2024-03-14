@@ -10,6 +10,10 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
+fun call(a,b,c) {
+    print a + b + c;
+}
+
 var a = "global a";
 var b = "global b";
 var c = "global c";

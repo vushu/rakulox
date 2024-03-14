@@ -110,6 +110,12 @@ class Arguments is ASTNode {
     has ASTNode @.arguments;
 }
 
+class Function is ASTNode {
+    has Str $.name;
+    has Str @.params;
+    has ASTNode @.body;
+}
+
 class Nothing is ASTNode {}
 
 

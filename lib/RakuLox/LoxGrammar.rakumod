@@ -243,5 +243,4 @@ grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
         my $error-msg = "Oh 💩 I cannot parse: $msg\nat line $line-no, around:" ~ $context;
         die $error-msg;
     }
-
 }

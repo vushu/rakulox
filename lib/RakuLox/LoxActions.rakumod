@@ -119,6 +119,14 @@ class LoxActions {
         make $<call>.made;
     }
 
+    multi method function($/ where $<parameters>) {
+        say "Function made with parameters";
+    }
+
+    multi method function($/) {
+        say "Function made";
+    }
+
     multi method call($/ where $<calling>) {
         my ASTNode @exprs = $<calling>.map: *.made;
         make Call.new(callee => $<primary>.made, arguments => @exprs);
