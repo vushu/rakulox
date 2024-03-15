@@ -9,7 +9,21 @@ class LoxCallable {
     }
 }
 
-has LoxEnvironment $.environment is rw = LoxEnvironment.new;
+class LoxFunction is LoxCallable {
+    has Function $.declaration;
+
+    method call(LoxInterpreter $interpreter, @arguments) {
+        my LoxEnvironment $environment = LoxEnvironment.new;
+        for $.declaration.params.kv -> $idx, $v {
+            $environment.define($v, @arguments[$idx]);
+        }
+        $interpreter.execute-block($.declaration.body, $environment);
+    }
+}
+
+
+has LoxEnvironment $.globals is rw = LoxEnvironment.new;
+has LoxEnvironment $.environment is rw = $!globals;
 
 method interpret(@statements) {
     my @result;
@@ -20,6 +34,7 @@ method interpret(@statements) {
 }
 
 multi method evaluate(Print $node) {
+    say "printing: ...";
     say self.evaluate($node.expression);
 }
 
@@ -42,17 +57,21 @@ multi method evaluate(Variable $node) {
     $.environment.get($node.name);
 }
 
-multi method evaluate(Block $node){
+method execute-block(ASTNode @statements, LoxEnvironment $environment){
     my LoxEnvironment $previous = $.environment;
     try {
-        $.environment = LoxEnvironment.new($previous);
-        for $node.statements -> $statement {
+        $.environment = $environment;
+        for @statements -> $statement {
             self.evaluate($statement);
         }
     }
     LEAVE  {
         $.environment = $previous;
     }
+}
+
+multi method evaluate(Block $node){
+    self.execute-block($node.statements, LoxEnvironment.new);
 }
 
 multi method evaluate(Expression $node) {
@@ -192,17 +211,15 @@ multi method evaluate(Arguments $node) {
    
 }
 
+multi method evaluate(Function $node) {
+    say "Creating LoxFunction";
+    my LoxFunction $function = LoxFunction.new(declaration => $node);
+    $.environment.define($node.name, $function);
+}
+
 multi method evaluate(Call $node) {
-    # my $callee = self.evaluate($node.callee);
-    my @evaluated_arguments;
-    # say $node.arguments;
-    for $node.arguments -> $arg {
-        @evaluated_arguments.push(self.evaluate($arg));
-        # my @arguments = $node.arguments.map: &self.evaluate;
-    }
-    @evaluated_arguments;
-    # my @arguments = $node.arguments.map: &self.evaluate;
-    # my LoxCallable $function = $callee;
-    # $function.call(self, @arguments);
+    my $callee = self.evaluate($node.callee);
+    my @evaluated_arguments = $node.arguments.map({self.evaluate($_)});
+    $callee.call(self, @evaluated_arguments);
 }
 

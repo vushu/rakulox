@@ -119,12 +119,21 @@ class LoxActions {
         make $<call>.made;
     }
 
-    multi method function($/ where $<parameters>) {
-        say "Function made with parameters";
+    method fun-decl($/) {
+        say "Func decl-made";
+        make $<function>.made;
     }
 
-    multi method function($/) {
-        say "Function made";
+    multi method function($/ where $<parameters>) {
+        make Function.new(name => $<identifier>.made.name, params => $<parameters>.made, body => $<block>.made);
+    }
+
+    method parameters($/) {
+        make $<identifier>.map: *.made.name;
+    }
+
+    multi method function($/ where !$<parameters>) {
+        make Function.new(name => $<identifier>.made.name, params => Nil, body => $<block>.made);
     }
 
     multi method call($/ where $<calling>) {
