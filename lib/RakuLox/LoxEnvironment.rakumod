@@ -13,7 +13,9 @@ method define($name, $value){
 
 method get($name) {
     return %.values{$name} if %.values{$name}:exists;
-    return $.enclosing.get($name) if $.enclosing;
+    if $.enclosing {
+        return $.enclosing.get($name);
+    }
 
     die "Undefined variable $name.";
 }

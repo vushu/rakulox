@@ -34,7 +34,6 @@ method interpret(@statements) {
 }
 
 multi method evaluate(Print $node) {
-    say "printing: ...";
     say self.evaluate($node.expression);
 }
 
@@ -54,10 +53,11 @@ multi method evaluate(Nothing $node) {
 }
 
 multi method evaluate(Variable $node) {
-    $.environment.get($node.name);
+    my $res = $.environment.get($node.name);
+    $res;
 }
 
-method execute-block(ASTNode @statements, LoxEnvironment $environment){
+method execute-block(@statements, LoxEnvironment $environment){
     my LoxEnvironment $previous = $.environment;
     try {
         $.environment = $environment;
@@ -71,7 +71,7 @@ method execute-block(ASTNode @statements, LoxEnvironment $environment){
 }
 
 multi method evaluate(Block $node){
-    self.execute-block($node.statements, LoxEnvironment.new);
+    self.execute-block($node.statements, LoxEnvironment.new($.environment));
 }
 
 multi method evaluate(Expression $node) {

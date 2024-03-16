@@ -10,14 +10,12 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
-fun call(a, b, c) {
-    print a + b + c;
+fun greet(name, something) {
+    print "Hi: " + name + " " + something;
 }
 
-var a = "Dinner";
-var b = "tonight is";
-var c = "Pizza!";
-call(a, b, c);
+var joe = "Joe";
+greet(joe, "lol");
 END
 
 

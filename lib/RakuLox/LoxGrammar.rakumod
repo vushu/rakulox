@@ -122,7 +122,7 @@ grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
     }
 
     rule call {
-        <primary> ['(' <calling=arguments>? ')' | '.' <calling=identifier>]*
+        <primary> ['(' <arguments>? ')' | '.' <identifier>]*
     }
 
     rule primary {
