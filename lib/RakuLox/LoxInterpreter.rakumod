@@ -212,7 +212,6 @@ multi method evaluate(Arguments $node) {
 }
 
 multi method evaluate(Function $node) {
-    say "Creating LoxFunction";
     my LoxFunction $function = LoxFunction.new(declaration => $node);
     $.environment.define($node.name, $function);
 }

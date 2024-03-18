@@ -1,6 +1,6 @@
 use Test;
 use lib "lib";
-plan 1;
+plan 2;
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
 use RakuLox::LoxInterpreter;
@@ -25,5 +25,28 @@ if ($statements) {
     my $result = $interpreter.interpret($statements);
 }
 
+$code = q:to/END/;
+fun hello(name) {
+    print "Hello " + name;
+}
+
+fun greet(name) {
+    print "Greetings " + name;
+}
+
+var joe = "Joe";
+greet(joe);
+hello("Mike");
+END
+
+$parser = LoxGrammar.new;
+$actions = LoxActions.new;
+$interpreter = LoxInterpreter.new;
+
+$statements = $parser.parse($code, :actions($actions)).made;
+ok $statements, "Successfully parsed";
+if ($statements) {
+    my $result = $interpreter.interpret($statements);
+}
 done-testing;
 

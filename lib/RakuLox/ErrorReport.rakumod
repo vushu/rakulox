@@ -11,7 +11,7 @@ role HighWaterErrorReport {
         my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
         my $line-no = $parsed.lines.elems;
         my $msg = "Cannot parse expression";
-        $msg ~= "; error in rule $*LASTRULE" if $*LASTRULE;
+        $msg ~= "; error in rule 👉 $*LASTRULE 👈" if $*LASTRULE;
         die "$msg at line $line-no";
     }
 
