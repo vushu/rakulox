@@ -4,6 +4,9 @@ use RakuLox::LoxEnvironment;
 unit class LoxInterpreter;
 
 class LoxCallable {
+    method arity {
+        die "Please implement me";
+    }
     method call(LoxInterpreter $interpreter, @arguments) {
         die "Please implement me";
     }
@@ -18,6 +21,10 @@ class LoxFunction is LoxCallable {
             $environment.define($v, @arguments[$idx]);
         }
         $interpreter.execute-block($.declaration.body, $environment);
+    }
+
+    method arity {
+        $.declaration.params.elems;
     }
 }
 
@@ -217,8 +224,11 @@ multi method evaluate(Function $node) {
 }
 
 multi method evaluate(Call $node) {
-    my $callee = self.evaluate($node.callee);
+    my $function = self.evaluate($node.callee);
     my @evaluated_arguments = $node.arguments.map({self.evaluate($_)});
-    $callee.call(self, @evaluated_arguments);
+    if @evaluated_arguments.elems ne $function.arity {
+        die "Expected $($function.arity) arguments but got $(@evaluated_arguments.elems)."
+    }
+    $function.call(self, @evaluated_arguments);
 }
 
