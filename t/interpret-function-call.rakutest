@@ -14,8 +14,8 @@ fun greet(name, something) {
     print "Hi: " + name + " " + something;
 }
 
-var joe = "Joe";
-greet(joe, "lol");
+var a = "Sam";
+greet(a, "lol");
 END
 
 
@@ -48,5 +48,6 @@ ok $statements, "Successfully parsed";
 if ($statements) {
     my $result = $interpreter.interpret($statements);
 }
+
 done-testing;
 

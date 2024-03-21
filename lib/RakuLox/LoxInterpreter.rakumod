@@ -225,10 +225,29 @@ multi method evaluate(Function $node) {
 
 multi method evaluate(Call $node) {
     my $function = self.evaluate($node.callee);
+    # say $node.callee.WHAT;
+    # self.call($function, Nil);
+
+
+    $function.call(self, [Nothing.new]);
+}
+
+multi method evaluate(Call $node where $node.arguments) {
+    my $function = self.evaluate($node.callee);
     my @evaluated_arguments = $node.arguments.map({self.evaluate($_)});
     if @evaluated_arguments.elems ne $function.arity {
         die "Expected $($function.arity) arguments but got $(@evaluated_arguments.elems)."
     }
-    $function.call(self, @evaluated_arguments);
+    # self.call($function, @evaluated_arguments);
+    $function.call(self, @evaluated_arguments)
+}
+
+multi method call($not-function-nor-class, \_) {
+    # say $not-function-nor-class;
+    die "Can only call function and classes and not of type ", $not-function-nor-class.^name;
+}
+
+multi method call(LoxInterpreter::LoxFunction $func, @arguments) {
+    $func.call(self, @arguments);
 }
 

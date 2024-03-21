@@ -121,8 +121,16 @@ grammar LoxGrammar does FailGoalErrorReport does HighWaterErrorReport {
         | <minus-op>
     }
 
+    token right-paren {
+        ')'
+    }
+
+    token left-paren {
+        '('
+    }
+
     rule call {
-        <primary> ['(' <arguments>? ')' | '.' <identifier>]*
+        <primary> [<left-paren><arguments>?<right-paren> | '.' <identifier>]*
     }
 
     rule primary {

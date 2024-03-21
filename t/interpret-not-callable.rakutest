@@ -1,0 +1,22 @@
+use Test;
+use lib "lib";
+plan 1;
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+"greet"();
+END
+
+
+my $statements = $parser.parse($code, :actions($actions)).made;
+ok $statements, "Successfully parsed";
+if ($statements) {
+    dies-ok $interpreter.interpret($statements), "Should die since it's a string";
+}
+done-testing;

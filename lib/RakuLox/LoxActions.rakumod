@@ -127,12 +127,16 @@ class LoxActions {
         make Function.new(name => $<identifier>.made.name, params => $<parameters>.made, body => $<block>.made);
     }
 
-    method parameters($/) {
-        make $<identifier>.map: *.made.name;
-    }
-
     multi method function($/ where !$<parameters>) {
         make Function.new(name => $<identifier>.made.name, params => Nil, body => $<block>.made);
+    }
+
+    method return($/) {
+
+    }
+
+    method parameters($/) {
+        make $<identifier>.map: *.made.name;
     }
 
     multi method call($/ where $<arguments>.elems ge 255) {
@@ -140,7 +144,6 @@ class LoxActions {
     }
 
     multi method call($/)  {
-        # my ASTNode @exprs = $<calling>.map: *.made;
         my ASTNode @arguments;
         for $<arguments> -> $arg {
             for $arg<expression> -> $expr {
@@ -153,7 +156,16 @@ class LoxActions {
         make Call.new(callee => $<primary>.made, arguments => @arguments);
     }
 
-    multi method call($/ where !$<arguments> && !$<identifier>) {
+    multi method call($/ where $<identifier>) {
+        make Call.new(callee => $<primary>.made, arguments => Nil);
+    }
+
+    multi method call($/ where $<left-paren> && !$<arguments> && $<right-paren>) {
+        say "case of paren";
+        make Call.new(callee => $<primary>.made, arguments => Nil);
+    }
+
+    multi method call($/ where !$<left-paren>){
         make $<primary>.made;
     }
 
