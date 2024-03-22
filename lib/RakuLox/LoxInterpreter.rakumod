@@ -28,9 +28,25 @@ class LoxFunction is LoxCallable {
     }
 }
 
+class NativeClock is LoxCallable {
+    method arity {
+        0;
+    }
+    method call(LoxInterpreter $interpreter, @arguments) {
+        DateTime.new.second/1000;
+    }
+    method Str {
+        "<native fn>";
+    }
+}
+
 
 has LoxEnvironment $.globals is rw = LoxEnvironment.new;
 has LoxEnvironment $.environment is rw = $!globals;
+
+submethod TWEAK {
+    $!globals.define("clock", NativeClock.new);
+}
 
 method interpret(@statements) {
     my @result;
