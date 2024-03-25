@@ -131,9 +131,6 @@ class LoxActions {
         make Function.new(name => $<identifier>.made.name, params => Nil, body => $<block>.made);
     }
 
-    method return($/) {
-
-    }
 
     method parameters($/) {
         make $<identifier>.map: *.made.name;
@@ -167,6 +164,10 @@ class LoxActions {
 
     multi method call($/ where !$<left-paren>){
         make $<primary>.made;
+    }
+
+    method return-stmt($/) {
+        make Return.new(keyword => "return", value => $<expression>.made);
     }
 
     multi method if-stmt($/ where !$<else-branch>) {

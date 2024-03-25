@@ -116,6 +116,11 @@ class Function is ASTNode {
     has ASTNode @.body;
 }
 
+class Return is ASTNode {
+    has Str $.keyword;
+    has ASTNode $.value;
+}
+
 class Nothing is ASTNode {}
 
 
