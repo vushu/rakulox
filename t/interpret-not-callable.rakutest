@@ -1,6 +1,6 @@
 use Test;
 use lib "lib";
-plan 1;
+plan 2;
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
 use RakuLox::LoxInterpreter;
@@ -17,6 +17,6 @@ END
 my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
-    dies-ok $interpreter.interpret($statements), "Should die since it's a string";
+    dies-ok {$interpreter.interpret($statements)}, "Should die since it's a string";
 }
 done-testing;

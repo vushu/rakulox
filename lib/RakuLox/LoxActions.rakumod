@@ -158,7 +158,6 @@ class LoxActions {
     }
 
     multi method call($/ where $<left-paren> && !$<arguments> && $<right-paren>) {
-        say "case of paren";
         make Call.new(callee => $<primary>.made, arguments => Nil);
     }
 

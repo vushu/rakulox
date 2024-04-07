@@ -7,7 +7,11 @@ class LoxCallable {
     method arity {
         die "Please implement me";
     }
-    method call(LoxInterpreter $interpreter, @arguments) {
+    multi method call(LoxInterpreter $interpreter, @arguments) {
+        die "Please implement me";
+    }
+
+    multi method call(LoxInterpreter $interpreter) {
         die "Please implement me";
     }
 }
@@ -15,11 +19,16 @@ class LoxCallable {
 class LoxFunction is LoxCallable {
     has Function $.declaration;
 
-    method call(LoxInterpreter $interpreter, @arguments) {
-        my LoxEnvironment $environment = LoxEnvironment.new;
+    multi method call(LoxInterpreter $interpreter, @arguments) {
+        my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
         for $.declaration.params.kv -> $idx, $v {
             $environment.define($v, @arguments[$idx]);
         }
+        $interpreter.execute-block($.declaration.body, $environment);
+    }
+
+    multi method call(LoxInterpreter $interpreter) {
+        my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
         $interpreter.execute-block($.declaration.body, $environment);
     }
 
@@ -87,6 +96,9 @@ method execute-block(@statements, LoxEnvironment $environment){
         for @statements -> $statement {
             self.evaluate($statement);
         }
+    }
+    CATCH {
+        say "caught something", $_;
     }
     LEAVE  {
         $.environment = $previous;
@@ -231,7 +243,13 @@ multi method evaluate(Arguments $node) {
         @arguments.push(self.evaluate($arg));
     }
     return @arguments;
-   
+}
+
+multi method evaluate(Return $node where !$node.value) {
+    # noop since no value
+}
+multi method evaluate(Return $node where ?$node.value) {
+    self.evaluate($node.value).throw;
 }
 
 multi method evaluate(Function $node) {
@@ -239,31 +257,27 @@ multi method evaluate(Function $node) {
     $.environment.define($node.name, $function);
 }
 
-multi method evaluate(Call $node) {
+multi method evaluate(Call $node where !$node.arguments) {
     my $function = self.evaluate($node.callee);
-    # say $node.callee.WHAT;
-    # self.call($function, Nil);
-
-
-    $function.call(self, [Nothing.new]);
+    check-function($function);
+    $function.call(self);
 }
 
-multi method evaluate(Call $node where $node.arguments) {
+multi method evaluate(Call $node where ?$node.arguments) {
     my $function = self.evaluate($node.callee);
     my @evaluated_arguments = $node.arguments.map({self.evaluate($_)});
     if @evaluated_arguments.elems ne $function.arity {
         die "Expected $($function.arity) arguments but got $(@evaluated_arguments.elems)."
     }
-    # self.call($function, @evaluated_arguments);
+    check-function($function);
     $function.call(self, @evaluated_arguments)
 }
 
-multi method call($not-function-nor-class, \_) {
-    # say $not-function-nor-class;
-    die "Can only call function and classes and not of type ", $not-function-nor-class.^name;
+multi sub check-function(LoxInterpreter::LoxFunction $func) {
+    # Satified that $func is indeed a function.
 }
 
-multi method call(LoxInterpreter::LoxFunction $func, @arguments) {
-    $func.call(self, @arguments);
+multi sub check-function($func) {
+    die "$func isn't a function! but a", $func.WHAT;
 }
 
