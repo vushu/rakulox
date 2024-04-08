@@ -3,6 +3,10 @@ use RakuLox::LoxEnvironment;
 
 unit class LoxInterpreter;
 
+class LoxReturn is Exception {
+    has $.value;
+}
+
 class LoxCallable {
     method arity {
         die "Please implement me";
@@ -24,12 +28,31 @@ class LoxFunction is LoxCallable {
         for $.declaration.params.kv -> $idx, $v {
             $environment.define($v, @arguments[$idx]);
         }
-        $interpreter.execute-block($.declaration.body, $environment);
+        my $res;
+        {
+            $interpreter.execute-block($.declaration.body, $environment);
+            CATCH {
+                when LoxReturn {
+                    $res = .value;
+                }
+            }
+        }
+        return $res if $res;
     }
 
     multi method call(LoxInterpreter $interpreter) {
         my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
-        $interpreter.execute-block($.declaration.body, $environment);
+        my $res;
+        {
+            $interpreter.execute-block($.declaration.body, $environment);
+            CATCH {
+                when LoxReturn {
+                   $res = $_.value;
+                }
+            }
+        }
+        return $res if $res;
+
     }
 
     method arity {
@@ -91,14 +114,9 @@ multi method evaluate(Variable $node) {
 
 method execute-block(@statements, LoxEnvironment $environment){
     my LoxEnvironment $previous = $.environment;
-    try {
-        $.environment = $environment;
-        for @statements -> $statement {
-            self.evaluate($statement);
-        }
-    }
-    CATCH {
-        say "caught something", $_;
+    $.environment = $environment;
+    for @statements -> $statement {
+        self.evaluate($statement);
     }
     LEAVE  {
         $.environment = $previous;
@@ -249,7 +267,7 @@ multi method evaluate(Return $node where !$node.value) {
     # noop since no value
 }
 multi method evaluate(Return $node where ?$node.value) {
-    self.evaluate($node.value).throw;
+    die LoxReturn.new(value => self.evaluate($node.value));
 }
 
 multi method evaluate(Function $node) {

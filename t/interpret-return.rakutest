@@ -1,6 +1,6 @@
 use Test;
 use lib "lib";
-plan 1;
+plan 2;
 use RakuLox::LoxGrammar;
 use RakuLox::LoxActions;
 use RakuLox::LoxInterpreter;
@@ -14,13 +14,13 @@ fun add(x,y) {
     return x + y;
 }
 
-print add(2, 10);
+add(2, 10);
 END
 
 
 my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
-    $interpreter.interpret($statements);
+    ok $interpreter.interpret($statements).tail eq 12, "Should be 12";
 }
 done-testing;
