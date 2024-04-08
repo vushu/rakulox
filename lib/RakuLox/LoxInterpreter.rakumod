@@ -28,7 +28,7 @@ class LoxFunction is LoxCallable {
         for $.declaration.params.kv -> $idx, $v {
             $environment.define($v, @arguments[$idx]);
         }
-        my $res;
+        my $res = Nil;
         {
             $interpreter.execute-block($.declaration.body, $environment);
             CATCH {
@@ -37,12 +37,12 @@ class LoxFunction is LoxCallable {
                 }
             }
         }
-        return $res if $res;
+        return $res;
     }
 
     multi method call(LoxInterpreter $interpreter) {
         my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
-        my $res;
+        my $res = Nil;
         {
             $interpreter.execute-block($.declaration.body, $environment);
             CATCH {
@@ -51,7 +51,7 @@ class LoxFunction is LoxCallable {
                 }
             }
         }
-        return $res if $res;
+        return $res;
 
     }
 

@@ -1,0 +1,30 @@
+use Test;
+use lib "lib";
+plan 2;
+use RakuLox::LoxGrammar;
+use RakuLox::LoxActions;
+use RakuLox::LoxInterpreter;
+
+my $actions = LoxActions.new;
+my $parser = LoxGrammar.new;
+my $interpreter = LoxInterpreter.new;
+
+my $code = q:to/END/;
+fun fib(n) {
+  if (n <= 1) return n;
+  return fib(n - 2) + fib(n - 1);
+}
+
+for (var i = 0; i < 20; i = i + 1) {
+  print fib(i);
+}
+fib(20);
+END
+
+
+my $statements = $parser.parse($code, :actions($actions)).made;
+ok $statements, "Successfully parsed";
+if ($statements) {
+    ok $interpreter.interpret($statements).tail eq 6765, "Should fib(20) should equal 6765";
+}
+done-testing;
