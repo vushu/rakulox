@@ -10,20 +10,27 @@ my $parser = LoxGrammar.new;
 my $interpreter = LoxInterpreter.new;
 
 my $code = q:to/END/;
-fun fib(n) {
-  if (n <= 1) return n;
-  return fib(n - 2) + fib(n - 1);
+fun makeCounter() {
+  var i = 0;
+  fun count() {
+    i = i + 1;
+    return i;
+  }
+
+  return count;
 }
 
-for (var i = 0; i < 20; i = i + 1) {
-  print fib(i);
+var counter = makeCounter();
+for (var i = 0; i < 10; i = i + 1) {
+  print counter();
 }
-fib(20);
+counter();
+
 END
 
 my $statements = $parser.parse($code, :actions($actions)).made;
 ok $statements, "Successfully parsed";
 if ($statements) {
-    ok $interpreter.interpret($statements).tail eq 6765, "Should fib(20) should equal 6765";
+  ok $interpreter.interpret($statements).tail eq 11, "should equal 11";
 }
 done-testing;

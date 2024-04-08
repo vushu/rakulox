@@ -154,11 +154,11 @@ class LoxActions {
     }
 
     multi method call($/ where $<identifier>) {
-        make Call.new(callee => $<primary>.made, arguments => Nil);
+        make Call.new(callee => $<primary>.made, arguments => ());
     }
 
     multi method call($/ where $<left-paren> && !$<arguments> && $<right-paren>) {
-        make Call.new(callee => $<primary>.made, arguments => Nil);
+        make Call.new(callee => $<primary>.made, arguments => ());
     }
 
     multi method call($/ where !$<left-paren>){

@@ -22,9 +22,10 @@ class LoxCallable {
 
 class LoxFunction is LoxCallable {
     has Function $.declaration;
+    has LoxEnvironment $.closure;
 
     multi method call(LoxInterpreter $interpreter, @arguments) {
-        my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
+        my LoxEnvironment $environment = LoxEnvironment.new($.closure);
         for $.declaration.params.kv -> $idx, $v {
             $environment.define($v, @arguments[$idx]);
         }
@@ -41,7 +42,7 @@ class LoxFunction is LoxCallable {
     }
 
     multi method call(LoxInterpreter $interpreter) {
-        my LoxEnvironment $environment = LoxEnvironment.new($interpreter.globals);
+        my LoxEnvironment $environment = LoxEnvironment.new($.closure);
         my $res = Nil;
         {
             $interpreter.execute-block($.declaration.body, $environment);
@@ -271,7 +272,7 @@ multi method evaluate(Return $node where ?$node.value) {
 }
 
 multi method evaluate(Function $node) {
-    my LoxFunction $function = LoxFunction.new(declaration => $node);
+    my LoxFunction $function = LoxFunction.new(declaration => $node, closure => $.environment);
     $.environment.define($node.name, $function);
 }
 
